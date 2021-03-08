@@ -21,7 +21,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "INSERT INTO employee (first_name, last_name, username, pwd) " + 
+			String sql = "INSERT INTO employee (first_name, last_name, username, pass) " + 
 			"VALUES (?, ?, ?, ?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, e.getFirstName());
@@ -39,19 +39,20 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		return true;
 	}
 
-	public boolean update(Employee e) { //UPDATE this method, it won't work right yet.
-PreparedStatement stmt = null;
+	public boolean update(Employee e) {
+		PreparedStatement stmt = null;
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
 			String sql = "UPDATE employee " + 
-			"SET first_name = ?, last_name = ?, username = ?, pwd = ? "; //+
-			//"WHERE ";
+			"SET first_name = ?, last_name = ?, email = ?, username = ?, pass = ? WHERE id =  ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, e.getFirstName());
 			stmt.setString(2, e.getLastName());
-			stmt.setString(3, e.getUsername());
-			stmt.setString(4, e.getPassword());
+			stmt.setString(3, e.getEmail());
+			stmt.setString(4, e.getUsername());
+			stmt.setString(5, e.getPassword());
+			stmt.setInt(6, e.getId());
 			
 			if (!stmt.execute()) {
 				return false;
@@ -77,9 +78,11 @@ PreparedStatement stmt = null;
 			int id = rs.getInt("id");
 			String firstName = rs.getString("first_name");
 			String lastName = rs.getString("last_name");
+			String email = rs.getString("email");
 			String username = rs.getString("username");
-			String pwd = rs.getString("pwd");
-			e = new Employee(id, firstName, lastName, username, pwd);
+			String pass = rs.getString("pass");
+			int role = rs.getInt("role_id");
+			e = new Employee(id, firstName, lastName, email, username, pass, role);
 			list.add(e);
 			}
 			
@@ -91,6 +94,39 @@ PreparedStatement stmt = null;
 			return null;
 		}
 		return list;
+	}
+
+	@Override
+	public Employee findByID(int id) {
+		PreparedStatement stmt = null;
+		Employee e = null;
+		
+		try {
+			Connection conn = ConnectionUtil.getConnection();
+			String sql = "SELECT * FROM employee WHERE id = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+			String firstName = rs.getString("first_name");
+			String lastName = rs.getString("last_name");
+			String email = rs.getString("email");
+			String username = rs.getString("username");
+			String pass = rs.getString("pass");
+			int role = rs.getInt("role_id");
+			e = new Employee(id, firstName, lastName, email, username, pass, role);
+			
+			}
+			
+			if (!stmt.execute()) {
+				return null;
+			}
+		} catch (SQLException ex) {
+			log.warn("Unable to retrieve user with specified ID", ex);
+			return null;
+		}
+		return e;
 	}
 
 }
