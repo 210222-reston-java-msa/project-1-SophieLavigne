@@ -11,7 +11,7 @@ public interface ReimbursementDAO {
 	 * We use the DAO design pattern to separate business logic (java) from our persistence layer.
 	 */
 	
-	public boolean insert(Reimbursement re);
+	public boolean insert(Employee e, Reimbursement re);
 	
 	public boolean update(Employee e, Reimbursement re);
 	

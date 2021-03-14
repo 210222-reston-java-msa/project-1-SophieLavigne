@@ -7,11 +7,13 @@ public class LoginTemplate {
 	public LoginTemplate() {
 		super();
 	}
+	
 	public LoginTemplate(String username, String password) {
 		super();
 		this.username = username;
 		this.password = password;
 	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -24,6 +26,7 @@ public class LoginTemplate {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -32,6 +35,7 @@ public class LoginTemplate {
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -53,11 +57,10 @@ public class LoginTemplate {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "LoginTemplate [username=" + username + ", password=" + password + "]";
 	}
-	
-	
 
 }

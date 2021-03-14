@@ -21,13 +21,14 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "INSERT INTO employee (first_name, last_name, username, pass) " + 
+			String sql = "INSERT INTO users (first_name, last_name, email, username, pass) " + 
 			"VALUES (?, ?, ?, ?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, e.getFirstName());
 			stmt.setString(2, e.getLastName());
-			stmt.setString(3, e.getUsername());
-			stmt.setString(4, e.getPassword());
+			stmt.setString(3, e.getEmail());
+			stmt.setString(4, e.getUsername());
+			stmt.setString(5, e.getPassword());
 			
 			if (!stmt.execute()) {
 				return false;
@@ -44,7 +45,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "UPDATE employee " + 
+			String sql = "UPDATE users " + 
 			"SET first_name = ?, last_name = ?, email = ?, username = ?, pass = ? WHERE id =  ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, e.getFirstName());
@@ -70,7 +71,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		Employee e = new Employee();
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "SELECT * FROM employee;";
+			String sql = "SELECT * FROM users;";
 			stmt = conn.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			
@@ -103,7 +104,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "SELECT * FROM employee WHERE id = ?";
+			String sql = "SELECT * FROM users WHERE id = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();

@@ -2,11 +2,15 @@ package com.sophie.services;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.sophie.dao.EmployeeDAO;
 import com.sophie.dao.EmployeeDAOImpl;
 import com.sophie.models.Employee;
 
 public class EmployeeService {
+	
+	private static Logger log = Logger.getLogger(EmployeeService.class);
 
 	public static EmployeeDAO eDao = new EmployeeDAOImpl();
 	
@@ -36,18 +40,26 @@ public class EmployeeService {
 		return null;
 	}
 	
+	public static Employee findByID(int id) {
+		return eDao.findByID(id);
+	}
+	
 	public static Employee confirmLogin(String username, String password) {
-		
+		log.info("Employee Service attempting to confirm login!");
 		Employee e = findByUsername(username);
+		log.info(e.toString());
 		
-		if (e == null) {
+		if (e.equals(null)) {
+			log.info("Employee not found!");
 			return null;
 		}
 		
-		if (e.getPassword() == password) {
+		if (e.getPassword().equals(password)) {
+			log.info("confirmLogin success!");
 			return e;
 		}
 		else {
+			log.info("Password mismatch!");
 			return null;
 		}
 	}

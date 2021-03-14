@@ -10,24 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import com.sophie.util.RequestHelper;
 
 /**
- * Servlet implementation class FrontControllerServlet
+ * Servlet implementation class FrontController
  */
 public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public FrontController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final String URI = request.getRequestURI().replace("EmployeeDBServlets/", "");
+
+		// we will rewrite the URL's 
+		final String URI = request.getRequestURI().replace("/project-1/", "");
 		
 		switch(URI) {
 		case "login":
@@ -39,14 +30,42 @@ public class FrontController extends HttpServlet {
 		case "employees":
 			RequestHelper.processEmployees(request, response);
 			break;
-		}
+		case "viewallforemployee":
+			RequestHelper.processViewReimbursementRequestsForEmployee(request, response);
+			break;
+		case "viewpendingforemployee":
+			RequestHelper.processViewPendingReimbursementRequestsForEmployee(request, response);
+			break;
+		case "viewresolvedforemployee":
+			RequestHelper.processViewResolvedReimbursementRequestsForEmployee(request, response);
+			break;
+		case "viewall":
+			RequestHelper.processViewReimbursementRequests(request, response);
+			break;
+		case "viewpending":
+			RequestHelper.processViewPendingReimbursementRequests(request, response);
+			break;
+		case "viewresolved":
+			RequestHelper.processViewResolvedReimbursementRequests(request, response);
+			break;
+		case "error":
+			RequestHelper.processError(request, response);
+			break;
+		case "viewinfo":
+			RequestHelper.processViewInfo(request, response);
+			break;
+		case "updateinfo":
+			RequestHelper.processUpdateInfo(request, response);
+			break;
+		case "postreimbursement":
+			RequestHelper.processPostReimbursement(request, response);
+			break;
+		} 
+		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

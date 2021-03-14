@@ -16,49 +16,22 @@ import com.sophie.util.ConnectionUtil;
 
 public class ReimbursementDAOImpl implements ReimbursementDAO{
 	private static Logger log = Logger.getLogger(ReimbursementDAOImpl.class);
-
-	/*Reimbursement contains the following fields - 
-	private int id;
-	private double amount;
-	private Timestamp submitted;
-	private Timestamp resolved;
-	private String description;
-	private int submitter_id;
-	private int resolver_id;
-	private int status_id;
-	private int type_id;
-	
-	ReimbursementDAO contains the following methods - 
-	public boolean insert(Reimbursement re);
-		
-	public boolean update(Reimbursement re);
-	
-	public List<Reimbursement> findAll();
-	
-	public List<Reimbursement> findAllPending();
-	
-	public List<Reimbursement> findAllResolved();
-	
-	public List<Reimbursement> findAllForEmployee(Employee e);
-	
-	public List<Reimbursement> findAllPendingForEmployee(Employee e);
-	
-	public List<Reimbursement> findAllResolvedForEmployee(Employee e);
-	 */
 	
 	@Override
-	public boolean insert(Reimbursement re) {
+	public boolean insert(Employee e, Reimbursement re) {
 		PreparedStatement stmt = null;
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
+			Timestamp submitted = new Timestamp(System.currentTimeMillis());
+			
 			String sql = "INSERT INTO reimbursements (amount, submitted, description, submitter_id, status_id, type_id) " + 
 			"VALUES (?, ?, ?, ?, ?, ?)";
 			stmt = conn.prepareStatement(sql);
 			stmt.setDouble(1, re.getAmount());
-			stmt.setTimestamp(2, re.getSubmitted());
+			stmt.setTimestamp(2, submitted);
 			stmt.setString(3, re.getDescription());
-			stmt.setInt(4, re.getSubmitter_id());
+			stmt.setInt(4, e.getId());
 			stmt.setInt(5, re.getStatus_id());
 			stmt.setInt(6, re.getType_id());
 			
@@ -251,7 +224,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 				return null;
 			}
 		} catch (SQLException ex) {
-			log.warn("Unable to retrieve all reimbursements for the specified employee", ex);
+			log.warn("Unable to retrieve all reimbursements for " + e.getUsername(), ex);
 			return null;
 		}
 		return list;
@@ -287,7 +260,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 				return null;
 			}
 		} catch (SQLException ex) {
-			log.warn("Unable to retrieve all users", ex);
+			log.warn("Unable to retrieve all pending reimbursements for " + e.getUsername(), ex);
 			return null;
 		}
 		return list;
@@ -323,7 +296,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 				return null;
 			}
 		} catch (SQLException ex) {
-			log.warn("Unable to retrieve all users", ex);
+			log.warn("Unable to retrieve all resolved reimbursements for " + e.getUsername(), ex);
 			return null;
 		}
 		return list;

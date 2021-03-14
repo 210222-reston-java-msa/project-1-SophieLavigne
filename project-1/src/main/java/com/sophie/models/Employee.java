@@ -9,6 +9,7 @@ public class Employee {
 	private String username;
 	private String password;
 	private int role_id;
+	String role;
 	
 	public Employee() {
 		super();
@@ -22,6 +23,26 @@ public class Employee {
 		this.username = username;
 		this.password = password;
 		this.role_id = role_id;
+	}
+	
+	public Employee(int id, String firstName, String lastName, String email, String username, int role_id) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.username = username;
+		switch(role_id) {
+		case 1:
+			this.role="Employee";
+			break;
+		case 2:
+			this.role="Manager";
+			break;
+		default:
+			this.role="";
+			break;
+		}
 	}
 	
 	public Employee(String firstName, String lastName, String email, String username, String password, int role_id) {
@@ -87,6 +108,12 @@ public class Employee {
 	public void setRole_id(int role_id) {
 		this.role_id = role_id;
 	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -96,6 +123,7 @@ public class Employee {
 		result = prime * result + id;
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result + role_id;
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
@@ -131,6 +159,11 @@ public class Employee {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
 		if (role_id != other.role_id)
 			return false;
 		if (username == null) {
@@ -143,8 +176,9 @@ public class Employee {
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", username=" + username + ", password=" + password + ", role_id=" + role_id + "]";
+				+ ", username=" + username + ", password=" + password + ", role_id=" + role_id + ", role=" + role + "]";
 	}
+
 	
 	
 	
