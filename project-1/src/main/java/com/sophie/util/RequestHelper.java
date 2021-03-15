@@ -58,9 +58,11 @@ public class RequestHelper {
 			int role_id = e.getRole_id();
 			
 			Cookie ck = new Cookie("role_id", String.valueOf(role_id));
+			Cookie ck2 = new Cookie("firstName", e.getFirstName());
 			//Get the current session, or create one if it doesn't exist yet.
 			HttpSession session = req.getSession();
 			response.addCookie(ck);
+			response.addCookie(ck2);
 			session.setAttribute("username", uName);
 			session.setAttribute("password", pwd);
 			session.setAttribute("role_id", role_id);

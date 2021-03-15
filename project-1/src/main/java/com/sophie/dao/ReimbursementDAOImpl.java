@@ -36,6 +36,11 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			stmt.setInt(5, re.getStatus_id());
 			stmt.setInt(6, re.getType_id());
 			
+			if (re.getAmount() < 0) {
+				log.warn("Attempt at a negative reimbursement!");
+				return false;
+			}
+			
 			if (!stmt.execute()) {
 				return false;
 			}
@@ -58,8 +63,6 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 	private int resolver_id;
 	private int status_id;
 	private int type_id;
-	
-	TODO: Check for validity against Project 0 update methods!
 	*/
 		PreparedStatement stmt = null;
 		if (e.getRole_id() == 1) {

@@ -22,3 +22,16 @@ org.postgresql.util.PSQLException: ERROR: column "submitter_id" of relation "rei
 	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:147)
 	at com.sophie.dao.ReimbursementDAOImpl.insert(ReimbursementDAOImpl.java:39)
 	at com.sophie.dao.ReimbursementDAOImpl.main(ReimbursementDAOImpl.java:330)
+2021-03-15 11:49:56 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=225.0, submitted=2021-03-15 02:53:59.104, resolved=null, description=Flight to Reno, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:49:57 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=600.0, submitted=null, resolved=null, description=Flight and hotel for conference, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:49:57 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=400.0, submitted=null, resolved=null, description=Hotel dining expenses, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:49:58 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=800.0, submitted=2021-03-15 02:56:41.143, resolved=null, description=Flight to Juneau, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:03 INFO  ReimbursementDAOImpl:278 - Reimbursement [amount=225.0, submitted=2021-03-15 02:53:59.104, resolved=null, description=Flight to Reno, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:03 INFO  ReimbursementDAOImpl:278 - Reimbursement [amount=600.0, submitted=null, resolved=null, description=Flight and hotel for conference, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:04 INFO  ReimbursementDAOImpl:278 - Reimbursement [amount=400.0, submitted=null, resolved=null, description=Hotel dining expenses, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:04 INFO  ReimbursementDAOImpl:278 - Reimbursement [amount=800.0, submitted=2021-03-15 02:56:41.143, resolved=null, description=Flight to Juneau, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:05 WARN  ReimbursementDAOImpl:40 - Attempt at a negative reimbursement!
+2021-03-15 11:51:06 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=225.0, submitted=2021-03-15 02:53:59.104, resolved=null, description=Flight to Reno, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:07 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=600.0, submitted=null, resolved=null, description=Flight and hotel for conference, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:07 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=400.0, submitted=null, resolved=null, description=Hotel dining expenses, submitter=JSmith, resolver=, status=Pending, type=Other]
+2021-03-15 11:51:08 INFO  ReimbursementDAOImpl:317 - Reimbursement [amount=800.0, submitted=2021-03-15 02:56:41.143, resolved=null, description=Flight to Juneau, submitter=JSmith, resolver=, status=Pending, type=Other]

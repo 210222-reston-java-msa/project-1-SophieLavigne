@@ -8,8 +8,35 @@
  var el;
  var dataOut;
  var ck = document.cookie;
-console.log(ck);
-var role_id = parseInt(ck.charAt(ck.length-1));
+ var firstName = "firstName" + "=";
+ var role_id_kernel = "role_id" + "=";
+ function cookiereader(){
+ console.log(ck);
+ var cookiesp1 = ck.split(";");
+ for (var i = 0; i < cookiesp1.length; i++){
+   var c = cookiesp1[i];
+   while (c.charAt(0) == ' '){
+     c = c.substring(1);
+   }
+   if (c.indexOf(firstName) == 0){
+     return c.substring(firstName.length, c.length);
+   }
+   }
+   return firstName;
+  }
+  function loginreader(){
+  
+ var cookiesp1 = ck.split(";");
+ for (var i = 0; i < cookiesp1.length; i++){
+   var c = cookiesp1[i];
+   while (c.charAt(0) == ' '){
+     c = c.substring(1);
+   }
+   if (c.indexOf(role_id_kernel) == 0){
+     return c.substring(role_id_kernel.length, c.length);
+  }
+  }
+ }
 
 function genEmployeeForm() {
   var employeeForm = {
@@ -24,23 +51,21 @@ return employeeForm;
 }
 
 function genReimbursementForm() {
-  if (role_id == 2){
   var reimbursementForm = {
     amount: document.getElementById("amount").value,
     description: document.getElementById("description").value,
     type: document.getElementById("type").value,
-    status: document.getElementById("status").value
     }
-  }
-  else if (role_id == 1){
-    var reimbursementForm = {
-      amount: document.getElementById("amount").value,
-      description: document.getElementById("description").value,
-      type: document.getElementById("type").value
-      }
-  }
   console.log(reimbursementForm);
   return reimbursementForm;
+}
+
+function genResolveReimbursementForm(){
+  var resolveReimbursementForm = {
+    status: document.getElementById("status_sel").value
+  }
+  console.log(resolveReimbursementForm);
+  return resolveReimbursementForm;
 }
 
  var element1=document.getElementById("anchordiv1");
@@ -169,6 +194,8 @@ function populateEmployeeTable(table_id, someArray) {
       tr.appendChild(td);
       td = document.createElement("td");
       td.innerHTML = someArray[i].username;
+      //td.id = i+"username";
+      //console.log(td.id);
       tr.appendChild(td);
       td = document.createElement("td");
       td.innerHTML = someArray[i].password;
@@ -198,6 +225,7 @@ function populateEmployeeTable(table_id, someArray) {
     tr.appendChild(td);
     //td.innerHTML = "View All Reimbursements for Employee";
     pETbtn3 = document.createElement("button");
+    pETbtn3.innerHTML = "View All Reimbursements for Employee";
     pETbtn3.setAttribute("onclick", "employeeViewReimbursementRequests()");
     pETbtn3.onclick = function() {employeeViewReimbursementRequests();};
     td.appendChild(pETbtn3);
@@ -239,9 +267,19 @@ function populateEmployeeTable(table_id, someArray) {
     th.innerHTML = "Submitter";
     tr.appendChild(th);
 
+    if(role_id == 2){
+
+    th = document.createElement("th");
+    
+    th.innerHTML = "Resolver";
+    tr.appendChild(th);
+    }
+
+    else if(role_id == 1){
     th = document.createElement("th");
     th.innerHTML = "Resolver";
     tr.appendChild(th);
+    }
 
     th = document.createElement("th");
     th.innerHTML = "Status";
@@ -271,15 +309,59 @@ function populateEmployeeTable(table_id, someArray) {
     for (j = 0; j < someArray.length; j++){ // 1. for each object create a new row (<tr>) and stick it onto (append) the table that exists
       tr = document.createElement("tr");
       table.appendChild(tr);
-      //console.log(someArray[j]); //This is an OBJECT with fields: id, amount, submitted, resolved, description, etc.
-      for(k = 0; k < Object.keys(someArray[j]).length; k++){ // 2. for each obj enter some data (<td>)
-        if (k == 1 || k == 2 || k == 3 || k == 4 || k == 6 || k == 8 || k == (Object.keys(someArray[j]).length - 2) || k == (Object.keys(someArray[j]).length - 1)){
-        //console.log(Object.values(someArray[j])[k]);
         td = document.createElement("td");
-        td.innerHTML = Object.values(someArray[j])[k];
+        td.innerHTML = Object.values(someArray[j])[1];
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[2];
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[3];
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[4];
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[6];
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[8];
+        tr.appendChild(td);
+
+        if(role_id == 1){
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[(Object.keys(someArray[j].length - 2))];
         tr.appendChild(td);
         }
-      }
+        else if(role_id == 2 && (Object.values(someArray[j])[(Object.keys(someArray[j].length - 2))] == "Pending")){
+        td = document.createElement("td");
+        tr.appendChild(td);
+        var sel = document.createElement("select");
+        sel.name = "status";
+        sel.id = "status_sel";
+        var opt1 = document.createElement("option");
+        opt1.value = "Pending";
+        opt1.innerHTML = "Pending"
+        sel.appendChild(opt1);
+        var opt2 = document.createElement("option");
+        opt2.value = "Approved";
+        opt2.innerHTML = "Approved";
+        sel.appendChild(opt2);
+        var opt3 = document.createElement("option");
+        opt3.value = "Rejected";
+        opt3.innerHTML = "Rejected";
+        sel.appendChild(opt3);
+        td.appendChild(sel);
+        }
+
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[(Object.keys(someArray[j]).length - 1)];
+        tr.appendChild(td);
       if(role_id == 2){
           
         td = document.createElement("td");
@@ -291,16 +373,8 @@ function populateEmployeeTable(table_id, someArray) {
         pRTbtn1.onclick = function() {resolveReimbursement();};
         td.appendChild(pRTbtn1);
         }
+      }
     }
-        }
-
-        /*
-      tr = document.createElement("tr");
-      table.appendChild(tr);
-      td = document.createElement("td");
-      td.innerHTML = someArray[j]
-      tr.appendChild(td);
-      */
 
 function viewPersonalInfo(){
     console.log("viewPersonalInfo");
@@ -416,7 +490,7 @@ function resolvePendingReimbursements(){
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(genReimbursementForm()),
+      body: JSON.stringify(genResolveReimbursementForm()),
     })
     .then(response => response.json)
     .then(viewAllReimbursementRequests());
@@ -437,7 +511,6 @@ function viewAllReimbursementRequests(){
 }
 
 function reimbursementAction(){
-  role_id = parseInt(ck.charAt(ck.length-1));
   switch(role_id){
     case 1:
       postReimbursement();
@@ -451,11 +524,13 @@ function reimbursementAction(){
 
  function loadHandler() {
     var element=document.getElementById("anchordiv");
-    role_id = parseInt(ck.charAt(ck.length-1));
-    console.log(`${role_id}`)
+    firstName = cookiereader();
+    role_id = loginreader();
+    role_id = Number(role_id);
+    console.log(role_id);
     prepEmployeeTable("employee_table", "anchordiv1");
     prepReimbursementTable("reimbursement_table", "anchordiv2");
-     switch(role_id){
+    switch(role_id){
         //CASE 1: USER IS AN EMPLOYEE -
 
         case 1: 
@@ -533,32 +608,14 @@ function reimbursementAction(){
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
 
-        var lbl = document.createElement("label");
-        lbl.for = "status";
-        lbl.innerHTML = "Status: ";
-        var sel = document.createElement("select");
-        sel.name = "status";
-        sel.id = "status";
-        var opt = document.createElement("option");
-        opt.value = "Pending";
-        opt.innerHTML = "Pending";
-        var formbase = document.getElementById("reimburseform");
-        formbase.appendChild(lbl);
-        lbl.append(sel);
-        sel.append(opt);
-        opt.value = "Approved";
-        opt.innerHTML = "Approved";
-        sel.append(opt);
-        opt.value = "Rejected";
-        opt.innerHTML = "Rejected";
-        sel.append(opt);
-
         break;
         default:
             break;
-        
-    return;
  }
+ //var introP = document.createElement("p");
+ //introP.innerHTML = "Welcome to the Reimbursement Portal, " + firstName;
+ //element.appendChild(introP);
+ //return;
 }
 
 window.onload = loadHandler();
