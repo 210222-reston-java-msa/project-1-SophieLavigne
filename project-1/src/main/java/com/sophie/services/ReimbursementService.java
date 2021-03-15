@@ -1,6 +1,6 @@
 package com.sophie.services;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.sophie.dao.ReimbursementDAO;
 import com.sophie.dao.ReimbursementDAOImpl;
@@ -11,9 +11,9 @@ public class ReimbursementService {
 
 	public static ReimbursementDAO rDao = new ReimbursementDAOImpl();
 	
-	public static boolean insert(Reimbursement re) {
+	public static boolean insert(Employee e, Reimbursement re) {
 		
-		return rDao.insert(re);
+		return rDao.insert(e, re);
 	}
 	
 	public static boolean update(Employee e, Reimbursement re) {
@@ -21,27 +21,27 @@ public class ReimbursementService {
 		return rDao.update(e, re);
 	}
 	
-	public static List<Reimbursement> findAll() {
+	public static ArrayList<Reimbursement> findAll() {
 		return rDao.findAll();
 	}
 	
-	public static List<Reimbursement> findAllPending() {
+	public static ArrayList<Reimbursement> findAllPending() {
 		return rDao.findAllPending();
 	}
 	
-	public static List<Reimbursement> findAllResolved() {
+	public static ArrayList<Reimbursement> findAllResolved() {
 		return rDao.findAllResolved();
 	}
 	
-	public static List<Reimbursement> findAllForEmployee(Employee e){
+	public static ArrayList<Reimbursement> findAllForEmployee(Employee e){
 		return rDao.findAllForEmployee(e);
 	}
 	
-	public static List<Reimbursement> findAllPendingForEmployee(Employee e){
+	public static ArrayList<Reimbursement> findAllPendingForEmployee(Employee e){
 		return rDao.findAllPendingForEmployee(e);
 	}
 	
-	public static List<Reimbursement> findAllResolvedForEmployee(Employee e){
+	public static ArrayList<Reimbursement> findAllResolvedForEmployee(Employee e){
 		return rDao.findAllResolvedForEmployee(e);
 }
 }

@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.sophie.models.Employee;
 import com.sophie.models.Reimbursement;
+import com.sophie.services.EmployeeService;
 import com.sophie.util.ConnectionUtil;
 
 public class ReimbursementDAOImpl implements ReimbursementDAO{
@@ -68,6 +69,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 		else { 
 			try {
 				Connection conn = ConnectionUtil.getConnection();
+				if (e.getRole_id() == 2) {
 				String sql = "UPDATE reimbursements " + 
 						"SET resolved = ?, resolver_id = ?, status_id = ?, WHERE id =  ?";
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -76,6 +78,11 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 				stmt.setInt(2, e.getId());
 				stmt.setInt(3, re.getStatus_id());
 				stmt.setInt(4, re.getId());
+				}
+				else if (e.getRole_id() == 1) {
+					log.warn("Attempted update by unqualified user!");
+					return false;
+				}
 			
 				if (!stmt.execute()) {
 					return false;
@@ -89,8 +96,8 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 	}
 
 	@Override
-	public List<Reimbursement> findAll() {
-		List<Reimbursement> list = new ArrayList<Reimbursement>();
+	public ArrayList<Reimbursement> findAll() {
+		ArrayList<Reimbursement> list = new ArrayList<Reimbursement>();
 		PreparedStatement stmt = null;
 		Reimbursement re = new Reimbursement();
 		try {
@@ -105,11 +112,49 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			Timestamp submitted = rs.getTimestamp("submitted");
 			Timestamp resolved = rs.getTimestamp("resolved");
 			String description = rs.getString("description");
-			int submitter = rs.getInt("submitter");
-			int resolver = rs.getInt("resolver");
-			int status = rs.getInt("status_id");
-			int type = rs.getInt("type_id");
-			re = new Reimbursement(id, amount, submitted, resolved, description, submitter, resolver, status, type);
+			int submitter_id = rs.getInt("submitter_id");
+			int resolver_id = rs.getInt("resolver_id");
+			int status_id = rs.getInt("status_id");
+			int type_id = rs.getInt("type_id");
+			String resolver = "";
+			if (resolver_id != 0) {
+			resolver = EmployeeService.findByID(resolver_id).getUsername();
+			}
+			String type = "";
+			String status = "";
+			switch(status_id) {
+			case 1:
+				status = "Pending";
+				break;
+			case 2:
+				status = "Approved";
+				break;
+			case 3:
+				status = "Rejected";
+				break;
+			default:
+				break;
+			}
+			switch(type_id) {
+			case 1:
+				type = "Lodging";
+				break;
+			case 2:
+				type = "Travel";
+				break;
+			case 3:
+				type = "Food";
+				break;
+			case 4:
+				type = "Other";
+				break;
+			default:
+				break;
+			}
+			String submitter = EmployeeService.findByID(submitter_id).getUsername();
+			
+			re = new Reimbursement(amount, submitted, resolved, description, submitter_id, submitter, resolver_id, resolver, status_id, type_id, status, type);
+			log.info(re.toString());
 			list.add(re);
 			}
 			
@@ -124,8 +169,8 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 	}
 
 	@Override
-	public List<Reimbursement> findAllPending() {
-		List<Reimbursement> list = new ArrayList<Reimbursement>();
+	public ArrayList<Reimbursement> findAllPending() {
+		ArrayList<Reimbursement> list = new ArrayList<Reimbursement>();
 		PreparedStatement stmt = null;
 		Reimbursement re = new Reimbursement();
 		try {
@@ -140,11 +185,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			Timestamp submitted = rs.getTimestamp("submitted");
 			Timestamp resolved = rs.getTimestamp("resolved");
 			String description = rs.getString("description");
-			int submitter = rs.getInt("submitter");
-			int resolver = rs.getInt("resolver");
-			int status = rs.getInt("status_id");
-			int type = rs.getInt("type_id");
-			re = new Reimbursement(id, amount, submitted, resolved, description, submitter, resolver, status, type);
+			int submitter_id = rs.getInt("submitter_id");
+			int resolver_id = rs.getInt("resolver_id");
+			int status_id = rs.getInt("status_id");
+			int type_id = rs.getInt("type_id");
+			
+			re = new Reimbursement(amount, submitted, resolved, description, submitter_id, resolver_id, status_id, type_id);
+			re = new Reimbursement(amount, submitted, resolved, description, re.getSubmitter(), re.getResolver(), re.getStatus(), re.getType());
+			log.info(re.toString());
 			list.add(re);
 			}
 			
@@ -159,8 +207,8 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 	}
 
 	@Override
-	public List<Reimbursement> findAllResolved() {
-		List<Reimbursement> list = new ArrayList<Reimbursement>();
+	public ArrayList<Reimbursement> findAllResolved() {
+		ArrayList<Reimbursement> list = new ArrayList<Reimbursement>();
 		PreparedStatement stmt = null;
 		Reimbursement re = new Reimbursement();
 		try {
@@ -175,11 +223,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			Timestamp submitted = rs.getTimestamp("submitted");
 			Timestamp resolved = rs.getTimestamp("resolved");
 			String description = rs.getString("description");
-			int submitter = rs.getInt("submitter");
-			int resolver = rs.getInt("resolver");
-			int status = rs.getInt("status_id");
-			int type = rs.getInt("type_id");
-			re = new Reimbursement(id, amount, submitted, resolved, description, submitter, resolver, status, type);
+			int submitter_id = rs.getInt("submitter_id");
+			int resolver_id = rs.getInt("resolver_id");
+			int status_id = rs.getInt("status_id");
+			int type_id = rs.getInt("type_id");
+			
+			re = new Reimbursement(amount, submitted, resolved, description, submitter_id, resolver_id, status_id, type_id);
+			re = new Reimbursement(amount, submitted, resolved, description, re.getSubmitter(), re.getResolver(), re.getStatus(), re.getType());
+			log.info(re.toString());
 			list.add(re);
 			}
 			
@@ -194,14 +245,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 	}
 
 	@Override
-	public List<Reimbursement> findAllForEmployee(Employee e) {
-		List<Reimbursement> list = new ArrayList<Reimbursement>();
+	public ArrayList<Reimbursement> findAllForEmployee(Employee e) {
+		ArrayList<Reimbursement> list = new ArrayList<Reimbursement>();
 		PreparedStatement stmt = null;
 		Reimbursement re = new Reimbursement();
 		int eid = e.getId();
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "SELECT * FROM reimbursements WHERE submitter = " + eid + ";";
+			String sql = "SELECT * FROM reimbursements WHERE submitter_id = " + eid + ";";
 			stmt = conn.prepareStatement(sql);
 			
 			ResultSet rs = stmt.executeQuery();
@@ -212,11 +263,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			Timestamp submitted = rs.getTimestamp("submitted");
 			Timestamp resolved = rs.getTimestamp("resolved");
 			String description = rs.getString("description");
-			int submitter = rs.getInt("submitter");
-			int resolver = rs.getInt("resolver");
-			int status = rs.getInt("status_id");
-			int type = rs.getInt("type_id");
-			re = new Reimbursement(id, amount, submitted, resolved, description, submitter, resolver, status, type);
+			int submitter_id = rs.getInt("submitter_id");
+			int resolver_id = rs.getInt("resolver_id");
+			int status_id = rs.getInt("status_id");
+			int type_id = rs.getInt("type_id");
+			
+			re = new Reimbursement(amount, submitted, resolved, description, submitter_id, resolver_id, status_id, type_id);
+			re = new Reimbursement(amount, submitted, resolved, description, re.getSubmitter(), re.getResolver(), re.getStatus(), re.getType());
+			log.info(re.toString());
 			list.add(re);
 			}
 			
@@ -231,14 +285,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 	}
 
 	@Override
-	public List<Reimbursement> findAllPendingForEmployee(Employee e) {
-		List<Reimbursement> list = new ArrayList<Reimbursement>();
+	public ArrayList<Reimbursement> findAllPendingForEmployee(Employee e) {
+		ArrayList<Reimbursement> list = new ArrayList<Reimbursement>();
 		PreparedStatement stmt = null;
 		Reimbursement re = new Reimbursement();
 		int eid = e.getId();
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "SELECT * FROM reimbursements WHERE submitter = " + eid + " AND status_id = 1";
+			String sql = "SELECT * FROM reimbursements WHERE submitter_id = " + eid + " AND status_id = 1";
 			stmt = conn.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			
@@ -248,11 +302,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			Timestamp submitted = rs.getTimestamp("submitted");
 			Timestamp resolved = rs.getTimestamp("resolved");
 			String description = rs.getString("description");
-			int submitter = rs.getInt("submitter");
-			int resolver = rs.getInt("resolver");
-			int status = rs.getInt("status_id");
-			int type = rs.getInt("type_id");
-			re = new Reimbursement(id, amount, submitted, resolved, description, submitter, resolver, status, type);
+			int submitter = rs.getInt("submitter_id");
+			int resolver = rs.getInt("resolver_id");
+			int status_id = rs.getInt("status_id");
+			int type_id = rs.getInt("type_id");
+			
+			re = new Reimbursement(amount, submitted, resolved, description, submitter, resolver, status_id, type_id);
+			re = new Reimbursement(amount, submitted, resolved, description, re.getSubmitter(), re.getResolver(), re.getStatus(), re.getType());
+			log.info(re.toString());
 			list.add(re);
 			}
 			
@@ -267,14 +324,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 	}
 
 	@Override
-	public List<Reimbursement> findAllResolvedForEmployee(Employee e) {
-		List<Reimbursement> list = new ArrayList<Reimbursement>();
+	public ArrayList<Reimbursement> findAllResolvedForEmployee(Employee e) {
+		ArrayList<Reimbursement> list = new ArrayList<Reimbursement>();
 		PreparedStatement stmt = null;
 		Reimbursement re = new Reimbursement();
 		int eid = e.getId();
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "SELECT * FROM reimbursements WHERE submitter = " + eid + " AND status_id != 1";
+			String sql = "SELECT * FROM reimbursements WHERE submitter_id = " + eid + " AND status_id != 1";
 			stmt = conn.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			
@@ -284,11 +341,14 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			Timestamp submitted = rs.getTimestamp("submitted");
 			Timestamp resolved = rs.getTimestamp("resolved");
 			String description = rs.getString("description");
-			int submitter = rs.getInt("submitter");
-			int resolver = rs.getInt("resolver");
-			int status = rs.getInt("status_id");
-			int type = rs.getInt("type_id");
-			re = new Reimbursement(id, amount, submitted, resolved, description, submitter, resolver, status, type);
+			int submitter = rs.getInt("submitter_id");
+			int resolver = rs.getInt("resolver_id");
+			int status_id = rs.getInt("status_id");
+			int type_id = rs.getInt("type_id");
+			
+			re = new Reimbursement(amount, submitted, resolved, description, submitter, resolver, status_id, type_id);
+			re = new Reimbursement(amount, submitted, resolved, description, re.getSubmitter(), re.getResolver(), re.getStatus(), re.getType());
+			log.info(re.toString());
 			list.add(re);
 			}
 			
@@ -301,5 +361,85 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 		}
 		return list;
 	}
+
+	@Override
+	public ArrayList<Reimbursement> findById() {
+		PreparedStatement stmt = null;
+		ArrayList<Reimbursement> list = new ArrayList<Reimbursement>();
+		Reimbursement re = new Reimbursement();
+		try {
+			Connection conn = ConnectionUtil.getConnection();
+			String sql = "SELECT * FROM reimbursements WHERE id = " + re.getId() +";";
+			stmt = conn.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+			int id = rs.getInt("id");
+			double amount = rs.getDouble("amount");
+			Timestamp submitted = rs.getTimestamp("submitted");
+			Timestamp resolved = rs.getTimestamp("resolved");
+			String description = rs.getString("description");
+			int submitter_id = rs.getInt("submitter_id");
+			int resolver_id = rs.getInt("resolver_id");
+			int status_id = rs.getInt("status_id");
+			int type_id = rs.getInt("type_id");
+			String resolver = "";
+			if (resolver_id != 0) {
+			resolver = EmployeeService.findByID(resolver_id).getUsername();
+			}
+			String type = "";
+			String status = "";
+			switch(status_id) {
+			case 1:
+				status = "Pending";
+				break;
+			case 2:
+				status = "Approved";
+				break;
+			case 3:
+				status = "Rejected";
+				break;
+			default:
+				break;
+			}
+			switch(type_id) {
+			case 1:
+				type = "Lodging";
+				break;
+			case 2:
+				type = "Travel";
+				break;
+			case 3:
+				type = "Food";
+				break;
+			case 4:
+				type = "Other";
+				break;
+			default:
+				break;
+			}
+			String submitter = EmployeeService.findByID(submitter_id).getUsername();
+			
+			re = new Reimbursement(amount, submitted, resolved, description, submitter_id, submitter, resolver_id, resolver, status_id, type_id, status, type);
+			list.add(re);
+			if (!stmt.execute()) {
+				return null;
+	}}
+		}catch (SQLException ex) {
+			log.warn("Unable to retrieve reimbursement by ID", ex);
+			return null;
+		}
+		return list;
+	}
+	
+//	public static void main(String[] args) { //Initialize two reimbursements.
+//		Employee e = EmployeeService.findByID(1);
+//	//(double amount, String description, int submitter_id, int status_id, int type_id)
+//		Reimbursement re = new Reimbursement(50, "1st Test", 1, 1, 1);
+//		insert(e, re);
+//		re = new Reimbursement(500, "2nd Test", 1, 1, 2);
+//		insert(e, re);
+//		
+//	}
 
 }

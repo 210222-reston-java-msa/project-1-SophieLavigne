@@ -2,6 +2,8 @@ package com.sophie.models;
 
 import java.sql.Timestamp;
 
+import com.sophie.services.EmployeeService;
+
 public class Reimbursement {
 
 	private int id;
@@ -10,13 +12,96 @@ public class Reimbursement {
 	private Timestamp resolved;
 	private String description;
 	private int submitter_id;
+	String submitter;
 	private int resolver_id;
+	String resolver;
 	private int status_id;
 	private int type_id;
+	private String status;
+	private String type;
 	
 	public Reimbursement() {
 		super();
 	}
+	
+	
+	
+	
+	
+	public Reimbursement(int id, double amount, Timestamp submitted, Timestamp resolved, String description,
+			int submitter_id, String submitter, int resolver_id, String resolver, int status_id, int type_id,
+			String status, String type) {
+		super();
+		this.id = id;
+		this.amount = amount;
+		this.submitted = submitted;
+		this.resolved = resolved;
+		this.description = description;
+		this.submitter_id = submitter_id;
+		this.submitter = submitter;
+		this.resolver_id = resolver_id;
+		this.resolver = resolver;
+		this.status_id = status_id;
+		this.type_id = type_id;
+		this.status = status;
+		this.type = type;
+		this.type = "";
+		this.status = "";
+		switch(status_id) {
+		case 1:
+			this.status = "Pending";
+			break;
+		case 2:
+			this.status = "Approved";
+			break;
+		case 3:
+			this.status = "Rejected";
+			break;
+		default:
+			break;
+		}
+		switch(type_id) {
+		case 1:
+			this.type = "Lodging";
+			break;
+		case 2:
+			this.type = "Travel";
+			break;
+		case 3:
+			this.type = "Food";
+			break;
+		case 4:
+			this.type = "Other";
+			break;
+		default:
+			break;
+		}
+	}
+
+
+
+
+
+	public Reimbursement(double amount, Timestamp submitted, Timestamp resolved, String description,
+			int submitter_id, String submitter, int resolver_id, String resolver, int status_id, int type_id,
+			String status, String type) {
+		super();
+		this.amount = amount;
+		this.submitted = submitted;
+		this.resolved = resolved;
+		this.description = description;
+		this.submitter_id = submitter_id;
+		this.submitter = submitter;
+		this.resolver_id = resolver_id;
+		this.resolver = resolver;
+		this.status_id = status_id;
+		this.type_id = type_id;
+		this.status = status;
+		this.type = type;
+	}
+
+
+
 	public Reimbursement(double amount, Timestamp submitted, Timestamp resolved, String description, int submitter_id,
 			int resolver_id, int status_id, int type_id) {
 		super();
@@ -25,12 +110,118 @@ public class Reimbursement {
 		this.resolved = resolved;
 		this.description = description;
 		this.submitter_id = submitter_id;
+		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
 		this.resolver_id = resolver_id;
+		if (resolver_id == 0) {
+			this.resolver="";
+		} else {
+		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		}
 		this.status_id = status_id;
 		this.type_id = type_id;
+		this.type = "";
+		this.status = "";
+		switch(status_id) {
+		case 1:
+			this.status = "Pending";
+			break;
+		case 2:
+			this.status = "Approved";
+			break;
+		case 3:
+			this.status = "Rejected";
+			break;
+		default:
+			break;
+		}
+		switch(type_id) {
+		case 1:
+			this.type = "Lodging";
+			break;
+		case 2:
+			this.type = "Travel";
+			break;
+		case 3:
+			this.type = "Food";
+			break;
+		case 4:
+			this.type = "Other";
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public Reimbursement(double amount, Timestamp submitted, Timestamp resolved, String description, int submitter_id,
+			int resolver_id, String status, String type) {
+		super();
+		this.amount = amount;
+		this.submitted = submitted;
+		this.resolved = resolved;
+		this.description = description;
+		this.submitter_id = submitter_id;
+		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
+		this.resolver_id = resolver_id;
+		if (resolver_id == 0) {
+			this.resolver="";
+		} else {
+		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		}
+		this.status = status;
+		this.type = type;
+	}
+	
+	public Reimbursement(double amount, String description, int submitter_id,
+			int status_id, int type_id) {
+		super();
+		this.amount = amount;
+		this.submitted = null;
+		this.resolved = null;
+		this.description = description;
+		this.submitter_id = submitter_id;
+		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
+		this.resolver_id = 0;
+		if (resolver_id == 0) {
+			this.resolver="";
+		} else {
+		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		}
+		this.status_id = status_id;
+		this.type_id = type_id;
+		this.type = "";
+		this.status = "";
+		switch(status_id) {
+		case 1:
+			this.status = "Pending";
+			break;
+		case 2:
+			this.status = "Approved";
+			break;
+		case 3:
+			this.status = "Rejected";
+			break;
+		default:
+			break;
+		}
+		switch(type_id) {
+		case 1:
+			this.type = "Lodging";
+			break;
+		case 2:
+			this.type = "Travel";
+			break;
+		case 3:
+			this.type = "Food";
+			break;
+		case 4:
+			this.type = "Other";
+			break;
+		default:
+			break;
+		}
 	}
 	public Reimbursement(int id, double amount, Timestamp submitted, Timestamp resolved, String description,
-			int submitter_id, int resolver_id, int status_id, int type_id) {
+			String submitter, String resolver, int submitter_id, int resolver_id, int status_id, int type_id) {
 		super();
 		this.id = id;
 		this.amount = amount;
@@ -38,9 +229,112 @@ public class Reimbursement {
 		this.resolved = resolved;
 		this.description = description;
 		this.submitter_id = submitter_id;
+		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
 		this.resolver_id = resolver_id;
+		if (resolver_id == 0) {
+			this.resolver="";
+		} else {
+		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		}
 		this.status_id = status_id;
 		this.type_id = type_id;
+		this.type = "";
+		this.status = "";
+		switch(status_id) {
+		case 1:
+			this.status = "Pending";
+			break;
+		case 2:
+			this.status = "Approved";
+			break;
+		case 3:
+			this.status = "Rejected";
+			break;
+		default:
+			break;
+		}
+		switch(type_id) {
+		case 1:
+			this.type = "Lodging";
+			break;
+		case 2:
+			this.type = "Travel";
+			break;
+		case 3:
+			this.type = "Food";
+			break;
+		case 4:
+			this.type = "Other";
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public Reimbursement(double amount, String description, String type) {
+		super();
+		this.amount = amount;
+		this.description = description;
+		this.type = type;
+		this.status_id = 1;
+		this.status = "Pending";
+		switch(type) {
+		case "Lodging":
+			status_id = 1;
+			break;
+		case "Travel":
+			status_id = 2;
+			break;
+		case "Food":
+			status_id = 3;
+			break;
+		default:
+			status_id = 4;
+			break;
+		}
+	}
+	
+	
+	public Reimbursement(double amount, Timestamp submitted, Timestamp resolved, String description, String submitter,
+			String resolver, String status, String type) {
+		super();
+		this.amount = amount;
+		this.submitted = submitted;
+		this.resolved = resolved;
+		this.description = description;
+		this.submitter = submitter;
+		this.resolver = resolver;
+		this.status = status;
+		this.type = type;
+		switch(status_id) {
+		case 1:
+			this.status = "Pending";
+			break;
+		case 2:
+			this.status = "Approved";
+			break;
+		case 3:
+			this.status = "Rejected";
+			break;
+		default:
+			break;
+		}
+		switch(type_id) {
+		case 1:
+			this.type = "Lodging";
+			break;
+		case 2:
+			this.type = "Travel";
+			break;
+		case 3:
+			this.type = "Food";
+			break;
+		case 4:
+			this.type = "Other";
+			break;
+		default:
+			break;
+		}
 	}
 	public int getId() {
 		return id;
@@ -96,6 +390,31 @@ public class Reimbursement {
 	public void setType_id(int type_id) {
 		this.type_id = type_id;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public String getSubmitter() {
+		return submitter;
+	}
+	public void setSubmitter(String submitter) {
+		this.submitter = submitter;
+	}
+	public String getResolver() {
+		return resolver;
+	}
+	public void setResolver(String resolver) {
+		this.resolver = resolver;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -107,9 +426,11 @@ public class Reimbursement {
 		result = prime * result + id;
 		result = prime * result + ((resolved == null) ? 0 : resolved.hashCode());
 		result = prime * result + resolver_id;
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + status_id;
 		result = prime * result + ((submitted == null) ? 0 : submitted.hashCode());
 		result = prime * result + submitter_id;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		result = prime * result + type_id;
 		return result;
 	}
@@ -138,6 +459,11 @@ public class Reimbursement {
 			return false;
 		if (resolver_id != other.resolver_id)
 			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
 		if (status_id != other.status_id)
 			return false;
 		if (submitted == null) {
@@ -147,16 +473,24 @@ public class Reimbursement {
 			return false;
 		if (submitter_id != other.submitter_id)
 			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
 		if (type_id != other.type_id)
 			return false;
 		return true;
 	}
 	@Override
 	public String toString() {
-		return "Reimbursement [id=" + id + ", amount=" + amount + ", submitted=" + submitted + ", resolved=" + resolved
-				+ ", description=" + description + ", submitter_id=" + submitter_id + ", resolver_id=" + resolver_id
-				+ ", status_id=" + status_id + ", type_id=" + type_id + "]";
+		return "Reimbursement [amount=" + amount + ", submitted=" + submitted + ", resolved=" + resolved
+				+ ", description=" + description + ", submitter=" + submitter + ", resolver=" + resolver + ", status="
+				+ status + ", type=" + type + "]";
 	}
+	
+	
+	
 	
 	
 }

@@ -5,172 +5,441 @@
  const URLBase = "http://localhost:8080/project-1";
 
  var i; //Simple iterator.
- 
- //var sampleJSONList = [{"id":1,"firstName":"Employee","lastName":"Tester","email":"etest@test.com","username":"Etest","password":"Etest","role_id":1,"role":null},{"id":2,"firstName":"Manager","lastName":"Tester","email":"mtest@test.com","username":"Mtest","password":"Mtest","role_id":2,"role":null}]
- //var sampleObj = JSON.parse(JSON.stringify(sampleJSONList));
+ var el;
+ var dataOut;
+ var ck = document.cookie;
+console.log(ck);
+var role_id = parseInt(ck.charAt(ck.length-1));
 
- function buildTableSkeletons() {
+function genEmployeeForm() {
+  var employeeForm = {
+  username: document.getElementById("username").value,
+  password: document.getElementById("password").value,
+  firstName: document.getElementById("firstname").value,
+  lastName: document.getElementById("lastname").value,
+  email: document.getElementById("email").value
+}
+console.log(employeeForm);
+return employeeForm;
+}
+
+function genReimbursementForm() {
+  if (document.getElementById("status") != null){
+  var reimbursementForm = {
+    amount: document.getElementById("amount").value,
+    description: document.getElementById("description").value,
+    type: document.getElementById("type").value,
+    status: document.getElementById("status").value
+    }
+  } else {
+    var reimbursementForm = {
+      amount: document.getElementById("amount").value,
+      description: document.getElementById("description").value,
+      type: document.getElementById("type").value
+  }
+  }
+  console.log(reimbursementForm);
+  return reimbursementForm;
+}
 
  var element1=document.getElementById("anchordiv1");
- var etable = document.createElement("TABLE");
 
- etable.id = "employee_table";
- element1.appendChild(etable);
-
- var etheadrow = document.createElement("tr");
- etable.appendChild(etheadrow);
-
- var eth1 = document.createElement("th");
- eth1.innerHTML = "First Name";
- etheadrow.appendChild(eth1);
-
- var eth2 = document.createElement("th");
- eth2.innerHTML = "Last Name";
- etheadrow.appendChild(eth2);
-
- var eth3 = document.createElement("th");
- eth3.innerHTML = "Email";
- etheadrow.appendChild(eth3);
-
- var eth4 = document.createElement("th");
- eth4.innerHTML = "Username";
- etheadrow.appendChild(eth4);
-
- var eth5 = document.createElement("th");
- eth5.innerHTML = "Password";
- etheadrow.appendChild(eth5);
-
- var eth6 = document.createElement("th");
- etheadrow.appendChild(eth6);
-
-var element2=document.getElementById("anchordiv2");
- var rtable = document.createElement("TABLE");
- rtable.id = "reimbursement_table";
- element2.appendChild(rtable);
-
-var rtheadrow = document.createElement("tr");
-rtable.appendChild(rtheadrow);
-
-var rth1 = document.createElement("th");
-rth1.innerHTML = "Amount"
- rtheadrow.appendChild(rth1);
-
- var rth2 = document.createElement("th");
- rth2.innerHTML = "Submission Time"
-  rtheadrow.appendChild(rth2);
-
-  var rth3 = document.createElement("th");
-rth3.innerHTML = "Resolution Time"
- rtheadrow.appendChild(rth3);
-
- var rth4 = document.createElement("th");
-rth4.innerHTML = "Description"
- rtheadrow.appendChild(rth4);
-
- var rth5 = document.createElement("th");
-rth5.innerHTML = "Submitter"
- rtheadrow.appendChild(rth5);
-
- var rth6 = document.createElement("th");
-rth6.innerHTML = "Resolver"
- rtheadrow.appendChild(rth6);
-
- var rth7 = document.createElement("th");
-rth7.innerHTML = "Status"
- rtheadrow.appendChild(rth7);
-
- var rth8 = document.createElement("th");
-rth8.innerHTML = "Type"
- rtheadrow.appendChild(rth8);
-
- var rth9 = document.createElement("th");
- rth9.innerHTML = "Post"
- rtheadrow.appendChild(rth9);
-
- }
-
- /*
- for (i = 0; i < sampleObj.length; i++){
-
- }
- */
+ 
 
  function logout() {
     console.log("logout");
     var URL = URLBase + "/logout";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+        window.location.replace(URLBase+"/");
+      }
+    }
+    xhr.open("POST", URL);
+    xhr.send();
 }
 
 function employeeViewReimbursementRequests() {
     console.log("employeeViewReimbursementRequests");
     var URL = URLBase + "/viewallforemployee";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var myArr = JSON.parse(this.responseText);
+          console.log(myArr[0]);
+          populateReimbursementTable(myArr, "reimbursement_table");
+      }
+  }
+  xhr.open("GET", URL);
+  xhr.send();
 }
 
 function employeeViewPendingReimbursementRequests() {
     console.log("employeeViewPendingReimbursementRequests");
     var URL = URLBase + "/viewpendingforemployee";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var myArr = JSON.parse(this.responseText);
+          console.log(myArr[0]);
+          populateReimbursementTable(myArr, "reimbursement_table");
+      }
+  }
+  xhr.open("GET", URL);
+  xhr.send();
 }
 
 function employeeViewResolvedReimbursementRequests(){
     console.log("employeeViewResolvedReimbursementRequests");
     var URL = URLBase + "/viewresolvedforemployee";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var myArr = JSON.parse(this.responseText);
+          console.log(myArr[0]);
+          populateReimbursementTable(myArr, "reimbursement_table");
+      }
+  }
+  xhr.open("GET", URL);
+  xhr.send();
 }
+function prepEmployeeTable(table_id, anchor) {
+  console.log("Hit the prepEmployeeTable function");
+  var anchor = document.getElementById(anchor);
+  var table = document.getElementById(table_id);
+    if (table == null){
+      table = document.createElement(table);
+      table.id = table_id;
+      anchor.appendChild(table);
+    }
+  let tr = document.createElement("tr");
+  table.appendChild(tr);
+  
+  let th = document.createElement("th");
+  th.innerHTML = "First Name";
+  tr.appendChild(th);
+  
+  th = document.createElement("th");
+  th.innerHTML = "Last Name";
+  tr.appendChild(th);
+
+  th = document.createElement("th");
+  th.innerHTML = "Email";
+  tr.appendChild(th);
+
+  th = document.createElement("th");
+  th.innerHTML = "Username";
+  tr.appendChild(th);
+
+  th = document.createElement("th");
+  th.innerHTML = "Password";
+  tr.appendChild(th);
+}
+
+function populateEmployeeTable(table_id, someArray) {
+  console.log("Hit the populateEmployeeTable function");
+  var table = document.getElementById(table_id);
+  console.log(someArray);
+  console.log(typeof(someArray));
+  //someArray.forEach( (obj) => {
+  for (var i = 0; i < someArray.length; i++) {
+  var obj = someArray[i];
+  console.log(obj);
+  // 1. for each object create a new row (<tr>) and stick it onto (append) the table that exists
+  let tr = document.createElement("tr");
+  table.appendChild(tr);
+  // 2. for each obj enter some data (<td>)
+  let td = document.createElement("td");
+          
+  tr.appendChild(td);
+  td.innerHTML = obj.firstName;
+         
+  td = document.createElement("td");
+  tr.appendChild(td);
+   td.innerHTML = obj.lastName;
+          
+  td = document.createElement("td");
+  tr.appendChild(td);
+  td.innerHTML = obj.email;
+          
+  td = document.createElement("td");
+  tr.appendChild(td);
+  td.innerHTML = obj.username;
+    
+  td = document.createElement("td");
+  tr.appendChild(td);
+  td.innerHTML = obj.password;
+    
+  if(role_id == 2){
+          
+    td = document.createElement("td");
+    tr.appendChild(td);
+    //td.innerHTML = "View Pending Reimbursements for Employee";
+    pETbtn1 = document.createElement("button");
+    pETbtn1.innerHTML = "View Pending Reimbursements";
+    pETbtn1.setAttribute("onclick", "employeeViewPendingReimbursementRequests()");
+    pETbtn1.onclick = function() {employeeViewPendingReimbursementRequests();};
+    td.appendChild(pETbtn1);
+    
+    td = document.createElement("td");
+    tr.appendChild(td);
+    //td.innerHTML = "View Resolved Reimbursements for Employee";
+    pETbtn2 = document.createElement("button");
+    pETbtn2.innerHTML = "View Resolved Reimbursements";
+    pETbtn2.setAttribute("onclick", "viewEmployeeResolvedReimbursementRequests()");
+    pETbtn2.onclick = function() {viewEmployeeResolvedReimbursementRequests();};
+    td.appendChild(pETbtn2);
+    
+    td = document.createElement("td");
+    tr.appendChild(td);
+    //td.innerHTML = "View All Reimbursements for Employee";
+    pETbtn3 = document.createElement("button");
+    pETbtn3.setAttribute("onclick", "employeeViewReimbursementRequests()");
+    pETbtn3.onclick = function() {employeeViewReimbursementRequests();};
+    td.appendChild(pETbtn3);
+      }
+    
+    };//);
+  }
+
+  function prepReimbursementTable(table_id, anchor) {
+    console.log("Hit the prepReimbursementTable function");
+    var anchor = document.getElementById(anchor);
+    var table = document.getElementById(table_id);
+    if (table == null){
+      table = document.createElement(table);
+      table.id = table_id;
+      anchor.appendChild(table);
+    }
+    let tr = document.createElement("tr");
+    table.appendChild(tr);
+    
+    let th = document.createElement("th");
+    th.innerHTML = "Amount";
+    tr.appendChild(th);
+    
+    th = document.createElement("th");
+    th.innerHTML = "Submission Time";
+    tr.appendChild(th);
+
+    th = document.createElement("th");
+    th.innerHTML = "Resolution Time";
+    tr.appendChild(th);
+
+    th = document.createElement("th");
+    th.innerHTML = "Description";
+    tr.appendChild(th);
+
+    th = document.createElement("th");
+    th.innerHTML = "Submitter";
+    tr.appendChild(th);
+
+    th = document.createElement("th");
+    th.innerHTML = "Resolver";
+    tr.appendChild(th);
+
+    th = document.createElement("th");
+    th.innerHTML = "Status";
+    tr.appendChild(th);
+
+    th = document.createElement("th");
+    th.innerHTML = "Type";
+    tr.appendChild(th);
+  }
+
+  function populateReimbursementTable(someArray, table_id){
+    console.log("Attempting to populate reimbursement table.");
+    var table = document.getElementById(table_id);
+    for (var i = 0; i < someArray.length; i++) {
+      console.log(someArray);
+      console.log(typeof(someArray));
+      console.log(obj);
+      var obj = someArray[i];
+        // 1. for each object create a new row (<tr>) and stick it onto (append) the table that exists
+        let tr = document.createElement("tr");
+        table.appendChild(tr);
+
+        // 2. for each obj enter some data (<td>)
+        let td = document.createElement("td");
+        
+        tr.appendChild(td);
+        td.innerHTML = obj.Amount;
+        
+        td = document.createElement("td");
+        tr.appendChild(td);
+        td.innerHTML = obj.Submission_Time;
+        
+        td = document.createElement("td");
+        tr.appendChild(td);
+        td.innerHTML = obj.Resolution_Time;
+        
+        td = document.createElement("td");
+        tr.appendChild(td);
+        td.innerHTML = obj.Description;
+  
+        td = document.createElement("td");
+        tr.appendChild(td);
+        td.innerHTML = obj.Submitter;
+
+        td = document.createElement("td");
+        tr.appendChild(td);
+        td.innerHTML = obj.Resolver;
+        
+        td = document.createElement("td");
+        tr.appendChild(td);
+        td.innerHTML = obj.Status;
+        
+        td = document.createElement("td");
+        tr.appendChild(td);
+        td.innerHTML = obj.Type;
+        };
+    }
 
 function viewPersonalInfo(){
     console.log("viewPersonalInfo");
     var URL = URLBase + "/viewinfo";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+        console.log(typeof(this.responseText));
+        var myArr = JSON.parse(this.responseText);
+        console.log(myArr);
+        console.log(typeof(myArr));
+        console.log(myArr[0]);
+        console.log(typeof(myArr[0]));
+        populateEmployeeTable("employee_table", myArr);
+        }
+    }
+    xhr.open("GET", URL);
+    xhr.send();
 }
 
-function employeeUpdatePersonalInfo(){
+function employeeUpdateAction(){
     console.log("employeeUpdatePersonalInfo");
     var URL = URLBase + "/updateinfo";
-    fetch(URL)
-    .then(response => response.json())
-}
+    fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(genEmployeeForm()),
+    })
+    .then(response => response.json)
+    .then(viewPersonalInfo());
+  }
 
-function viewResolvePendingReimbursementRequests() {
-    console.log("viewResolvePendingReimbursementRequests");
+function viewPendingReimbursementRequests() {
+    console.log("viewPendingReimbursementRequests");
     var URL = URLBase + "/viewpending";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var myArr = JSON.parse(this.responseText);
+          console.log(myArr[0]);
+          populateReimbursementTable(myArr, "reimbursement_table");
+        }
+      }
+      xhr.open("GET", URL);
+      xhr.send();
 }
 
 function viewResolvedReimbursementRequests() {
     console.log("viewResolvedReimbursementRequests");
     var URL = URLBase + "/viewresolved";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var myArr = JSON.parse(this.responseText);
+          console.log(myArr[0]);
+          populateReimbursementTable(myArr, "reimbursement_table");
+        }
+      }
+      xhr.open("GET", URL);
+      xhr.send();
 }
 
 function viewAllEmployees(){
     console.log("viewAllEmployees");
     var URL = URLBase + "/employees";
-    fetch(URL)
-    .then(response => response.json())
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+        console.log(typeof(this.responseText));
+        var myArr = JSON.parse(this.responseText);
+        console.log(myArr);
+        console.log(typeof(myArr));
+        console.log(myArr[0]);
+        console.log(typeof(myArr[0]));
+        populateEmployeeTable("employee_table", myArr);
+      }
+  }
+  xhr.open("GET", URL);
+  xhr.send();
 }
 
 function postReimbursement(){
     console.log("postReimbursement");
     var URL = URLBase + "/postreimbursement";
-    fetch(URL)
+    fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(genReimbursementForm()),
+    })
     .then(response => response.json)
+    .then(employeeViewReimbursementRequests());
+  }
+
+function resolvePendingReimbursements(){
+  console.log("postReimbursement");
+    var URL = URLBase + "/resolvereimbursement";
+    fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(genReimbursementForm()),
+    })
+    .then(response => response.json)
+    .then(viewAllReimbursementRequests());
+  }
+
+function viewAllReimbursementRequests(){
+  console.log("View All Reimbursements");
+    var URL = URLBase + "/viewallreimbursements";
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var myArr = JSON.parse(this.responseText);
+          console.log(myArr[0]);
+          populateReimbursementTable(myArr, "reimbursement_table");
+      }
+  }
+}
+
+function reimbursementAction(){
+  role_id = parseInt(ck.charAt(ck.length-1));
+  switch(role_id){
+    case 1:
+      postReimbursement();
+      break;
+    case 2:
+      resolvePendingReimbursements();
+      break;
+
+  }
 }
 
  function loadHandler() {
-    var ck = document.cookie;
-    console.log(ck);
-    var role_id = parseInt(ck.charAt(ck.length-1));
     var element=document.getElementById("anchordiv");
+    role_id = parseInt(ck.charAt(ck.length-1));
     console.log(`${role_id}`)
+    prepEmployeeTable("employee_table", "anchordiv1");
+    prepReimbursementTable("reimbursement_table", "anchordiv2");
      switch(role_id){
         //CASE 1: USER IS AN EMPLOYEE -
 
@@ -180,24 +449,12 @@ function postReimbursement(){
         var btn2 = document.createElement("BUTTON");
         var btn3 = document.createElement("BUTTON");
         var btn4 = document.createElement("BUTTON");
-        var btn5 = document.createElement("BUTTON");
-        function tableGen(reimbursement_type) {//Reimbursement_type is an integer: 0 - Everything, 1 - Pending, 2 - Resolved
-            /*TODO: Set up tableGen so that it submits a request to the servlet to get the list of reimbursements that satisfies the request.
-            */
-           console.log("Called tableGen w/ Reimbursement Type: " + reimbursement_type);
-        }
 
-        function employeeTableGen() {
-            console.log("Called employeeTableGen");
-        }
-
-        function employeeUpdateTableGen(){
-            console.log("Called employeeUpdateTableGen");
-        }
         btn1.innerHTML = "View Reimbursement Requests";
         btn1.setAttribute("onclick", "employeeViewReimbursementRequests();");
         btn1.onclick = function() {employeeViewReimbursementRequests();};
         element.appendChild(btn1);
+
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
 
@@ -205,6 +462,7 @@ function postReimbursement(){
         btn2.setAttribute("onclick", "employeeViewPendingReimbursementRequests();");
         btn2.onclick = function() {employeeViewPendingReimbursementRequests();};
         element.appendChild(btn2);
+
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
 
@@ -212,6 +470,7 @@ function postReimbursement(){
         btn3.setAttribute("onclick", "employeeViewResolvedReimbursementRequests();");
         btn3.onclick = function() {employeeViewResolvedReimbursementRequests();};
         element.appendChild(btn3);
+
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
 
@@ -219,15 +478,13 @@ function postReimbursement(){
         btn4.setAttribute("onclick", "viewPersonalInfo();");
         btn4.onclick = function() {viewPersonalInfo();};
         element.appendChild(btn4);
+        
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
+        //("employee_table", "anchordiv1");
+        prepEmployeeTable("employee_table", "anchordiv1");
+        prepReimbursementTable("reimbursement_table", "anchordiv2");
 
-        btn5.innerHTML = "Update Personal Info"; //Add another button, this one lets an employee update their personal info.
-        btn5.setAttribute("onclick", "employeeUpdatePersonalInfo();");
-        btn5.onclick = function() {employeeUpdatePersonalInfo();};
-        element.appendChild(btn5);
-        element.appendChild(document.createElement("br"));
-        element.appendChild(document.createElement("br"));
         break;
 
         //CASE 2: USER IS A MANAGER -
@@ -236,10 +493,11 @@ function postReimbursement(){
         var btn1 = document.createElement("BUTTON");
         var btn2 = document.createElement("BUTTON");
         var btn3 = document.createElement("BUTTON");
+        var btn4 = document.createElement("BUTTON");
 
         btn1.innerHTML = "View or Resolve Pending Reimbursement Requests"; //This button shows all pending reimbursements and lets the user mark them as pending, approved, or denied.
-        btn1.setAttribute("onclick", "viewResolvePendingReimbursementRequests();");
-        btn1.onclick = function() {viewResolvePendingReimbursementRequests();};
+        btn1.setAttribute("onclick", "viewPendingReimbursementRequests();");
+        btn1.onclick = function() {viewPendingReimbursementRequests();};
         element.appendChild(btn1);
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
@@ -251,13 +509,18 @@ function postReimbursement(){
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
 
-        btn3.innerHTML = "View All Employees"; //Add another button, this one shows resolved reimbursements when clicked.
-        btn3.setAttribute("onclick", "viewAllEmployees();");
-        btn3.onclick = function() {viewAllEmployees();};
+        btn3.innerHTML = "View All Reimbursements"; //Add another button, this one shows resolved reimbursements when clicked.
+        btn3.setAttribute("onclick", "viewAllReimbursementRequests();");
+        btn3.onclick = function() {viewAllReimbursementRequests();};
         element.appendChild(btn3);
-        element.appendChild(document.createElement("br"));
-        element.appendChild(document.createElement("br"));
 
+        btn4.innerHTML = "View All Employees"; //Add another button, this one shows resolved reimbursements when clicked.
+        btn4.setAttribute("onclick", "viewAllEmployees();");
+        btn4.onclick = function() {viewAllEmployees();};
+        element.appendChild(btn4);
+        element.appendChild(document.createElement("br"));
+        element.appendChild(document.createElement("br"));
+        
         break;
         default:
             break;
@@ -267,4 +530,3 @@ function postReimbursement(){
 }
 
 window.onload = loadHandler();
-buildTableSkeletons();

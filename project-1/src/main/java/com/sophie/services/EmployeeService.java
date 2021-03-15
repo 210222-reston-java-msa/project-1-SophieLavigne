@@ -1,5 +1,6 @@
 package com.sophie.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,7 +25,7 @@ public class EmployeeService {
 		return eDao.update(e);
 	}
 	
-	public static List<Employee> findAll() {
+	public static ArrayList<Employee> findAll() {
 		return eDao.findAll();
 	}
 	
@@ -47,18 +48,19 @@ public class EmployeeService {
 	public static Employee confirmLogin(String username, String password) {
 		log.info("Employee Service attempting to confirm login!");
 		Employee e = findByUsername(username);
-		log.info(e.toString());
 		
-		if (e.equals(null)) {
+		if (e == null) {
 			log.info("Employee not found!");
 			return null;
 		}
 		
 		if (e.getPassword().equals(password)) {
+			log.info(e.toString());
 			log.info("confirmLogin success!");
 			return e;
 		}
 		else {
+			log.info(e.toString());
 			log.info("Password mismatch!");
 			return null;
 		}

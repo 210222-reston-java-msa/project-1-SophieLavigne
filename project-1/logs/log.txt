@@ -1,0 +1,24 @@
+2021-03-14 04:45:17 WARN  ReimbursementDAOImpl:43 - Unable to insert user
+org.postgresql.util.PSQLException: ERROR: column "submitter_id" of relation "reimbursements" does not exist
+  Position: 61
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2505)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2241)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:310)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:447)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:368)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:158)
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:147)
+	at com.sophie.dao.ReimbursementDAOImpl.insert(ReimbursementDAOImpl.java:39)
+	at com.sophie.dao.ReimbursementDAOImpl.main(ReimbursementDAOImpl.java:328)
+2021-03-14 04:45:18 WARN  ReimbursementDAOImpl:43 - Unable to insert user
+org.postgresql.util.PSQLException: ERROR: column "submitter_id" of relation "reimbursements" does not exist
+  Position: 61
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2505)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2241)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:310)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:447)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:368)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:158)
+	at org.postgresql.jdbc.PgPreparedStatement.execute(PgPreparedStatement.java:147)
+	at com.sophie.dao.ReimbursementDAOImpl.insert(ReimbursementDAOImpl.java:39)
+	at com.sophie.dao.ReimbursementDAOImpl.main(ReimbursementDAOImpl.java:330)

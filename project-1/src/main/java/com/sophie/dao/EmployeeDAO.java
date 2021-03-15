@@ -1,5 +1,6 @@
 package com.sophie.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sophie.models.Employee;
@@ -14,7 +15,7 @@ public interface EmployeeDAO {
 	public boolean insert(Employee e);
 	public boolean update(Employee e);
 	
-	public List<Employee> findAll();
+	public ArrayList<Employee> findAll();
 	
 	public Employee findByID(int id);
 	

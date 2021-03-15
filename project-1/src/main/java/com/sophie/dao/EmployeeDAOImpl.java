@@ -21,14 +21,14 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
-			String sql = "INSERT INTO users (first_name, last_name, email, username, pass) " + 
+			String sql = "INSERT INTO users (username, pass, first_name, last_name, email) " + 
 			"VALUES (?, ?, ?, ?)";
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, e.getFirstName());
-			stmt.setString(2, e.getLastName());
-			stmt.setString(3, e.getEmail());
-			stmt.setString(4, e.getUsername());
-			stmt.setString(5, e.getPassword());
+			stmt.setString(1, e.getUsername());
+			stmt.setString(2, e.getPassword());
+			stmt.setString(3, e.getFirstName());
+			stmt.setString(4, e.getLastName());
+			stmt.setString(5, e.getEmail());
 			
 			if (!stmt.execute()) {
 				return false;
@@ -45,14 +45,15 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
+			log.info(e.toString());
 			String sql = "UPDATE users " + 
-			"SET first_name = ?, last_name = ?, email = ?, username = ?, pass = ? WHERE id =  ?";
+			"SET username = ?, pass = ?, first_name = ?, last_name = ?, email = ? WHERE id =  ?";
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, e.getFirstName());
-			stmt.setString(2, e.getLastName());
-			stmt.setString(3, e.getEmail());
-			stmt.setString(4, e.getUsername());
-			stmt.setString(5, e.getPassword());
+			stmt.setString(1, e.getUsername());
+			stmt.setString(2, e.getPassword());
+			stmt.setString(3, e.getFirstName());
+			stmt.setString(4, e.getLastName());
+			stmt.setString(5, e.getEmail());
 			stmt.setInt(6, e.getId());
 			
 			if (!stmt.execute()) {
@@ -65,8 +66,8 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 		return true;
 	}
 
-	public List<Employee> findAll() {
-		List<Employee> list = new ArrayList<Employee>();
+	public ArrayList<Employee> findAll() {
+		ArrayList<Employee> list = new ArrayList<Employee>();
 		PreparedStatement stmt = null;
 		Employee e = new Employee();
 		try {
@@ -82,8 +83,9 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 			String email = rs.getString("email");
 			String username = rs.getString("username");
 			String pass = rs.getString("pass");
-			int role = rs.getInt("role_id");
-			e = new Employee(id, firstName, lastName, email, username, pass, role);
+			int role_id = rs.getInt("role_id");
+			e = new Employee(id, firstName, lastName, email, username, pass, role_id);
+			e = new Employee(id, firstName, lastName, email, username, pass, role_id, e.getRole());
 			list.add(e);
 			}
 			
@@ -117,6 +119,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 			String pass = rs.getString("pass");
 			int role = rs.getInt("role_id");
 			e = new Employee(id, firstName, lastName, email, username, pass, role);
+			e = new Employee(id, firstName, lastName, email, username, pass, role, e.getRole());
 			
 			}
 			

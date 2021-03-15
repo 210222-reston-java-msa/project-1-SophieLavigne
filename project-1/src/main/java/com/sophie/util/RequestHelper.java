@@ -3,6 +3,7 @@ package com.sophie.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,10 +15,13 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sophie.models.Employee;
+import com.sophie.models.EmployeeTemplate;
 import com.sophie.models.LoginTemplate;
 import com.sophie.models.Reimbursement;
+import com.sophie.models.ReimbursementTemplate;
 import com.sophie.services.EmployeeService;
 import com.sophie.services.ReimbursementService;
 
@@ -92,7 +96,6 @@ public class RequestHelper {
 			session.removeAttribute("role_id");
 			session.invalidate();
 			
-			PrintWriter pw = response.getWriter();
 			response.setContentType("application/json");
 			RequestDispatcher rd = req.getRequestDispatcher("/index.html");
 			try {
@@ -118,6 +121,7 @@ public class RequestHelper {
 		String json = om.writeValueAsString(allReimE);
 		//Send the JSON String back.
 		PrintWriter pw = response.getWriter();
+		log.info(json);
 		pw.println(json);
 		return;
 	}
@@ -130,11 +134,12 @@ public class RequestHelper {
 		HttpSession session = req.getSession();
 		String uName = session.getAttribute("username").toString();
 		Employee e = EmployeeService.findByUsername(uName);
-		List<Reimbursement> allReimPE = ReimbursementService.findAllPendingForEmployee(e);
+		ArrayList<Reimbursement> allReimPE = ReimbursementService.findAllPendingForEmployee(e);
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReimPE);
 		//Send the JSON String back.
 		PrintWriter pw = response.getWriter();
+		log.info(json);
 		pw.println(json);
 		return;
 	}
@@ -147,11 +152,12 @@ public class RequestHelper {
 		HttpSession session = req.getSession();
 		String uName = session.getAttribute("username").toString();
 		Employee e = EmployeeService.findByUsername(uName);
-		List<Reimbursement> allReimRE = ReimbursementService.findAllResolvedForEmployee(e);
+		ArrayList<Reimbursement> allReimRE = ReimbursementService.findAllResolvedForEmployee(e);
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReimRE);
 		//Send the JSON String back.
 		PrintWriter pw = response.getWriter();
+		log.info(json);
 		pw.println(json);		
 		return;
 	}
@@ -161,11 +167,12 @@ public class RequestHelper {
 		//Set content type to application/json.
 		response.setContentType("application/json");
 		//Get list of all employees in DB.
-		List<Reimbursement> allReim = ReimbursementService.findAll();
+		ArrayList<Reimbursement> allReim = ReimbursementService.findAll();
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReim);
 		//Send the JSON String back.
 		PrintWriter pw = response.getWriter();
+		log.info(json);
 		pw.println(json);		
 		return;
 	}
@@ -175,11 +182,12 @@ public class RequestHelper {
 		//Set content type to application/json.
 		response.setContentType("application/json");
 		//Get list of all employees in DB.
-		List<Reimbursement> allReimP = ReimbursementService.findAllPending();
+		ArrayList<Reimbursement> allReimP = ReimbursementService.findAllPending();
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReimP);
 		//Send the JSON String back.
 		PrintWriter pw = response.getWriter();
+		log.info(json);
 		pw.println(json);		
 		return;
 	}
@@ -189,11 +197,12 @@ public class RequestHelper {
 		//Set content type to application/json.
 		response.setContentType("application/json");
 		//Get list of all employees in DB.
-		List<Reimbursement> allReimR = ReimbursementService.findAllResolved();
+		ArrayList<Reimbursement> allReimR = ReimbursementService.findAllResolved();
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReimR);
 		//Send the JSON String back.
 		PrintWriter pw = response.getWriter();
+		log.info(json);
 		pw.println(json);		
 		return;
 	}
@@ -203,11 +212,12 @@ public class RequestHelper {
 		//Set content type to application/json.
 		response.setContentType("application/json");
 		//Get list of all employees in DB.
-		List<Employee> allEmps = EmployeeService.findAll();
+		ArrayList<Employee> allEmps = EmployeeService.findAll();
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allEmps);
 		//
 		PrintWriter pw = response.getWriter();
+		log.info(json);
 		pw.println(json);		
 		return;
 	}
@@ -245,9 +255,28 @@ public class RequestHelper {
 				HttpSession session = req.getSession();
 				String uName = session.getAttribute("username").toString();
 				Employee e = EmployeeService.findByUsername(uName);
-				/*
-				 * The back half of this method involves taking input from the request and updating elements in the database accordingly.
-				 */
+				//We want to turn the request into a string to process.
+				BufferedReader reader = req.getReader();
+				StringBuilder sb = new StringBuilder();
+				
+				//Logic to transfer from reader to stringbuilder.
+				String line = reader.readLine();
+				while (line != null) {
+					sb.append(line);
+					line = reader.readLine();
+				}
+				
+				String body = sb.toString();
+				log.info(body);
+				
+				//Building employee from a template.
+				EmployeeTemplate employeeUpdateAttempt = om.readValue(body, EmployeeTemplate.class); //From JSON to Java.
+				log.info(employeeUpdateAttempt.toString());
+				log.info(e);
+				log.info(employeeUpdateAttempt.getPassword());
+				Employee e1 = new Employee(e.getId(), employeeUpdateAttempt.getFirstName(), employeeUpdateAttempt.getLastName(), employeeUpdateAttempt.getEmail(), employeeUpdateAttempt.getUsername(), employeeUpdateAttempt.getPassword(), e.getRole_id());
+				log.info(e1.toString());
+				EmployeeService.update(e1);
 				return;
 			}
 
@@ -258,11 +287,83 @@ public class RequestHelper {
 				HttpSession session = req.getSession();
 				String uName = session.getAttribute("username").toString();
 				Employee e = EmployeeService.findByUsername(uName);
-				/*
-				 * The back half of this method involves taking input from the request and creating an element in the database accordingly.
-				 */
+				Reimbursement re = new Reimbursement();
+				//We want to turn the request into a string to process.
+				BufferedReader reader = req.getReader();
+				StringBuilder sb = new StringBuilder();
+				
+				//Logic to transfer from reader to stringbuilder.
+				String line = reader.readLine();
+				while (line != null) {
+					sb.append(line);
+					line = reader.readLine();
+				}
+				
+				String body = sb.toString();
+				log.info(body);
+				
+				ReimbursementTemplate reimbursementAttempt = om.readValue(body, ReimbursementTemplate.class); //From JSON to Java.
+				re = new Reimbursement(reimbursementAttempt.getId(), reimbursementAttempt.getAmount(), reimbursementAttempt.getSubmitted(), reimbursementAttempt.getResolved(), reimbursementAttempt.getDescription(), e.getId(), reimbursementAttempt.getSubmitter(), reimbursementAttempt.getResolver_id(), reimbursementAttempt.getResolver(), reimbursementAttempt.getStatus_id(), reimbursementAttempt.getType_id(), reimbursementAttempt.getStatus(), reimbursementAttempt.getType());
+				if (re.getStatus_id() == 0) {
+					re.setStatus_id(1);
+				}
+				if (re.getType_id() == 0) {
+					re.setType_id(4);
+				}
+				ReimbursementService.insert(e, re);
 				return;
 			}
+
+	public static void processResolveReimbursement(HttpServletRequest request, HttpServletResponse response) {
+		log.info("Attempting to resolve a reimbursement request.");
+		//Set content type to application/json.
+				response.setContentType("application/json");
+				HttpSession session = request.getSession();
+				String uName = session.getAttribute("username").toString();
+				Employee e = EmployeeService.findByUsername(uName);
+				Reimbursement re = new Reimbursement();
+				//We want to turn the request into a string to process.
+				BufferedReader reader = null;
+				try {
+					reader = request.getReader();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				StringBuilder sb = new StringBuilder();
+				
+				//Logic to transfer from reader to stringbuilder.
+				String line = null;
+				try {
+					line = reader.readLine();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				while (line != null) {
+					sb.append(line);
+					try {
+						line = reader.readLine();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				String body = sb.toString();
+				log.info(body);
+				
+				//Building a model called ReimbursementTemplate which holds a Username and Password.
+				try {
+					ReimbursementTemplate reimbursementAttempt = om.readValue(body, ReimbursementTemplate.class);
+				} catch (JsonProcessingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} //From JSON to Java.
+				re = new Reimbursement(re.getId(), re.getAmount(), re.getSubmitted(), re.getResolved(), re.getDescription(), re.getSubmitter_id(), re.getSubmitter(), re.getResolver_id(), re.getResolver(), re.getStatus_id(), re.getType_id(), re.getStatus(), re.getType());
+				ReimbursementService.update(e, re);
+				return;
+			}
+		
+	}
 	
 	/*
 	 * public static void main(String[] args) {
@@ -270,4 +371,3 @@ public class RequestHelper {
 		log.info(EmployeeService.findAll());
 	}
 	*/
-	}

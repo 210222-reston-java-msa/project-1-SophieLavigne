@@ -14,7 +14,7 @@ public class Employee {
 	public Employee() {
 		super();
 	}
-	public Employee(int id, String firstName, String lastName, String email, String username, String password, int role_id) {
+	public Employee(int id, String firstName, String lastName, String email, String username, String password, int role_id, String role) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -23,6 +23,17 @@ public class Employee {
 		this.username = username;
 		this.password = password;
 		this.role_id = role_id;
+		switch(role_id) {
+		case 1:
+			this.role="Employee";
+			break;
+		case 2:
+			this.role="Manager";
+			break;
+		default:
+			this.role="";
+			break;
+		}
 	}
 	
 	public Employee(int id, String firstName, String lastName, String email, String username, int role_id) {
@@ -32,6 +43,7 @@ public class Employee {
 		this.lastName = lastName;
 		this.email = email;
 		this.username = username;
+		this.password = password;
 		switch(role_id) {
 		case 1:
 			this.role="Employee";
@@ -53,6 +65,17 @@ public class Employee {
 		this.username = username;
 		this.password = password;
 		this.role_id = role_id;
+		switch(role_id) {
+		case 1:
+			this.role="Employee";
+			break;
+		case 2:
+			this.role="Manager";
+			break;
+		default:
+			this.role="";
+			break;
+		}
 	}
 	
 	public Employee(String firstName, String lastName, String email, String username, String password) {
@@ -63,8 +86,49 @@ public class Employee {
 		this.username = username;
 		this.password = password;
 		this.role_id = 1;
+		switch(role_id) {
+		case 1:
+			this.role="Employee";
+			break;
+		case 2:
+			this.role="Manager";
+			break;
+		default:
+			this.role="";
+			break;
+		}
 	}
 	
+	public Employee(String firstName, String lastName, String email, String username, String password, String role) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.role = role;
+	}
+	public Employee(int id, String firstName, String lastName, String email, String username, String password,
+			int role_id) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		switch(role_id) {
+		case 1:
+			this.role="Employee";
+			break;
+		case 2:
+			this.role="Manager";
+			break;
+		default:
+			this.role="";
+			break;
+		}
+	}
 	public int getId() {
 		return id;
 	}
@@ -175,9 +239,10 @@ public class Employee {
 	}
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", username=" + username + ", password=" + password + ", role_id=" + role_id + ", role=" + role + "]";
+		return "Employee [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", username="
+				+ username + ", password=" + password + ", role=" + role + "]";
 	}
+	
 
 	
 	

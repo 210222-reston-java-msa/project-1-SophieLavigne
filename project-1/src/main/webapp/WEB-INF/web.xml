@@ -25,6 +25,7 @@
 		<url-pattern>/viewinfo</url-pattern>
 		<url-pattern>/updateinfo</url-pattern>
 		<url-pattern>/postreimbursement</url-pattern>
+		<url-pattern>/resolvereimbursement</url-pattern>
 			
 	</servlet-mapping>
 

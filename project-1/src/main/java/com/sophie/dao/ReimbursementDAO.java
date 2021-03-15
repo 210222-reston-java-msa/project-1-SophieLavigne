@@ -1,6 +1,6 @@
 package com.sophie.dao;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.sophie.models.Employee;
 import com.sophie.models.Reimbursement;
@@ -15,16 +15,18 @@ public interface ReimbursementDAO {
 	
 	public boolean update(Employee e, Reimbursement re);
 	
-	public List<Reimbursement> findAll();
+	public ArrayList<Reimbursement> findAll();
 	
-	public List<Reimbursement> findAllPending();
+	public ArrayList<Reimbursement> findById();
 	
-	public List<Reimbursement> findAllResolved();
+	public ArrayList<Reimbursement> findAllPending();
 	
-	public List<Reimbursement> findAllForEmployee(Employee e);
+	public ArrayList<Reimbursement> findAllResolved();
 	
-	public List<Reimbursement> findAllPendingForEmployee(Employee e);
+	public ArrayList<Reimbursement> findAllForEmployee(Employee e);
 	
-	public List<Reimbursement> findAllResolvedForEmployee(Employee e);
+	public ArrayList<Reimbursement> findAllPendingForEmployee(Employee e);
+	
+	public ArrayList<Reimbursement> findAllResolvedForEmployee(Employee e);
 
 }

@@ -16,8 +16,52 @@
 
 <br/>
 <br/>
+
+<form>
+    <label>First Name:</label>
+    <input type="text" id="firstname" name="firstname" value="First Name">
+    <br/>
+    <label>Last Name:</label>
+    <input type="text" id="lastname" name="lastname" value="Last Name">
+    <br/>
+    <label>Email:</label>
+    <input type="text" id="email" name="email" value="Email">
+    <br/>
+    <label>Username:</label>
+    <input type="text" id="username" name="username" value="Username">
+    <br/>
+    <label>Password:</label>
+    <input type="password" id="password" name="password" value="Password">
+    <br/>
+    <button type="button" onclick="employeeUpdateAction()", id="action">Update Record</button>
+</form>
+<br/>
+<br/>
 <div id="anchordiv2"></div>
 
+<br/>
+<br/>
+<form id="reimburseform">
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount">
+    <br/>
+
+    <label for="description">Description:</label>
+    <textarea id="description", name="description"></textarea>
+    <br/>
+
+    <label for="type">What type of reimbursement is this?</label>
+    <select name="type" id="type">
+        <option value="Lodging">Lodging</option>
+        <option value="Travel">Travel</option>
+        <option value="Food">Food</option>
+        <option value="Other">Other</option>
+    </select>
+    <br/>
+    </select>
+    <br/>
+    <button type="button" onclick="reimbursementAction(event.preventDefault())", id="reimbursementaction">Update Reimbursements</button>
+</form>
 <br/>
 <br/>
 <button type="button" onclick="logout(event.preventDefault())">Log Out</button>
