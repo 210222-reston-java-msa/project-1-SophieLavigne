@@ -100,9 +100,10 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 	}
 
 	@Override
-	public Employee findByID(int id) {
+	public ArrayList<Employee> findByID(int id) {
 		PreparedStatement stmt = null;
 		Employee e = null;
+		ArrayList<Employee> out = new ArrayList<Employee>();
 		
 		try {
 			Connection conn = ConnectionUtil.getConnection();
@@ -120,6 +121,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 			int role = rs.getInt("role_id");
 			e = new Employee(id, firstName, lastName, email, username, pass, role);
 			e = new Employee(id, firstName, lastName, email, username, pass, role, e.getRole());
+			out.add(e);
 			
 			}
 			
@@ -130,7 +132,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 			log.warn("Unable to retrieve user with specified ID", ex);
 			return null;
 		}
-		return e;
+		return out;
 	}
 
 }

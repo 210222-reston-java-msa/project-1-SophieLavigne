@@ -29,38 +29,39 @@ public class EmployeeService {
 		return eDao.findAll();
 	}
 	
-	public static Employee findByUsername(String username) {
-		List<Employee> all = eDao.findAll();
-		
+	public static ArrayList<Employee> findByUsername(String username) {
+		ArrayList<Employee> all = eDao.findAll();
+		ArrayList<Employee> out = new ArrayList<Employee>();
 		for (Employee e: all) {
 			if (e.getUsername().equals(username)) {
-				return e;
+				out.add(e);
+				return out;
 			}
 		}
 		
 		return null;
 	}
 	
-	public static Employee findByID(int id) {
+	public static ArrayList<Employee> findByID(int id) {
 		return eDao.findByID(id);
 	}
 	
 	public static Employee confirmLogin(String username, String password) {
 		log.info("Employee Service attempting to confirm login!");
-		Employee e = findByUsername(username);
+		ArrayList<Employee> e = findByUsername(username);
 		
 		if (e == null) {
 			log.info("Employee not found!");
 			return null;
 		}
 		
-		if (e.getPassword().equals(password)) {
-			log.info(e.toString());
+		if (e.get(0).getPassword().equals(password)) {
+			log.info(e.get(0).toString());
 			log.info("confirmLogin success!");
-			return e;
+			return e.get(0);
 		}
 		else {
-			log.info(e.toString());
+			log.info(e.get(0).toString());
 			log.info("Password mismatch!");
 			return null;
 		}

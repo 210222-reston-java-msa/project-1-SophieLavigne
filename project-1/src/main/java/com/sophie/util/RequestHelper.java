@@ -115,7 +115,7 @@ public class RequestHelper {
 		//Get list of all employees in DB.
 		HttpSession session = req.getSession();
 		String uName = session.getAttribute("username").toString();
-		Employee e = EmployeeService.findByUsername(uName);
+		Employee e = EmployeeService.findByUsername(uName).get(0);
 		List<Reimbursement> allReimE = ReimbursementService.findAllForEmployee(e);
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReimE);
@@ -133,7 +133,7 @@ public class RequestHelper {
 		//Get list of all employees in DB.
 		HttpSession session = req.getSession();
 		String uName = session.getAttribute("username").toString();
-		Employee e = EmployeeService.findByUsername(uName);
+		Employee e = EmployeeService.findByUsername(uName).get(0);
 		ArrayList<Reimbursement> allReimPE = ReimbursementService.findAllPendingForEmployee(e);
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReimPE);
@@ -151,7 +151,7 @@ public class RequestHelper {
 		//Get list of all employees in DB.
 		HttpSession session = req.getSession();
 		String uName = session.getAttribute("username").toString();
-		Employee e = EmployeeService.findByUsername(uName);
+		Employee e = EmployeeService.findByUsername(uName).get(0);
 		ArrayList<Reimbursement> allReimRE = ReimbursementService.findAllResolvedForEmployee(e);
 		//Turn list of Employees into a JSON string.
 		String json = om.writeValueAsString(allReimRE);
@@ -217,8 +217,8 @@ public class RequestHelper {
 		String json = om.writeValueAsString(allEmps);
 		//
 		PrintWriter pw = response.getWriter();
-		log.info(json);
 		pw.println(json);		
+		log.info(json);
 		return;
 	}
 	
@@ -239,12 +239,12 @@ public class RequestHelper {
 		//Find the employee.
 		HttpSession session = req.getSession();
 		String uName = session.getAttribute("username").toString();
-		Employee e = EmployeeService.findByUsername(uName);
+		ArrayList<Employee> e = EmployeeService.findByUsername(uName);
 		//Return the employee as a JSON object.
 		String json = om.writeValueAsString(e);
 		PrintWriter pw = response.getWriter();
-		pw.println(json);
 		log.info(json);
+		pw.println(json);
 		return;
 	}
 
@@ -254,7 +254,7 @@ public class RequestHelper {
 				response.setContentType("application/json");
 				HttpSession session = req.getSession();
 				String uName = session.getAttribute("username").toString();
-				Employee e = EmployeeService.findByUsername(uName);
+				Employee e = EmployeeService.findByUsername(uName).get(0);
 				//We want to turn the request into a string to process.
 				BufferedReader reader = req.getReader();
 				StringBuilder sb = new StringBuilder();
@@ -286,7 +286,7 @@ public class RequestHelper {
 				response.setContentType("application/json");
 				HttpSession session = req.getSession();
 				String uName = session.getAttribute("username").toString();
-				Employee e = EmployeeService.findByUsername(uName);
+				Employee e = EmployeeService.findByUsername(uName).get(0);
 				Reimbursement re = new Reimbursement();
 				//We want to turn the request into a string to process.
 				BufferedReader reader = req.getReader();
@@ -320,7 +320,7 @@ public class RequestHelper {
 				response.setContentType("application/json");
 				HttpSession session = request.getSession();
 				String uName = session.getAttribute("username").toString();
-				Employee e = EmployeeService.findByUsername(uName);
+				Employee e = EmployeeService.findByUsername(uName).get(0);
 				Reimbursement re = new Reimbursement();
 				//We want to turn the request into a string to process.
 				BufferedReader reader = null;

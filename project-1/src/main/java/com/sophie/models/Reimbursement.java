@@ -110,12 +110,12 @@ public class Reimbursement {
 		this.resolved = resolved;
 		this.description = description;
 		this.submitter_id = submitter_id;
-		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
+		this.submitter = EmployeeService.findByID(submitter_id).get(0).getUsername();
 		this.resolver_id = resolver_id;
 		if (resolver_id == 0) {
 			this.resolver="";
 		} else {
-		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		this.resolver = EmployeeService.findByID(resolver_id).get(0).getUsername();
 		}
 		this.status_id = status_id;
 		this.type_id = type_id;
@@ -160,12 +160,12 @@ public class Reimbursement {
 		this.resolved = resolved;
 		this.description = description;
 		this.submitter_id = submitter_id;
-		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
+		this.submitter = EmployeeService.findByID(submitter_id).get(0).getUsername();
 		this.resolver_id = resolver_id;
 		if (resolver_id == 0) {
 			this.resolver="";
 		} else {
-		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		this.resolver = EmployeeService.findByID(resolver_id).get(0).getUsername();
 		}
 		this.status = status;
 		this.type = type;
@@ -179,12 +179,12 @@ public class Reimbursement {
 		this.resolved = null;
 		this.description = description;
 		this.submitter_id = submitter_id;
-		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
+		this.submitter = EmployeeService.findByID(submitter_id).get(0).getUsername();
 		this.resolver_id = 0;
 		if (resolver_id == 0) {
 			this.resolver="";
 		} else {
-		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		this.resolver = EmployeeService.findByID(resolver_id).get(0).getUsername();
 		}
 		this.status_id = status_id;
 		this.type_id = type_id;
@@ -229,12 +229,12 @@ public class Reimbursement {
 		this.resolved = resolved;
 		this.description = description;
 		this.submitter_id = submitter_id;
-		this.submitter = EmployeeService.findByID(submitter_id).getUsername();
+		this.submitter = EmployeeService.findByID(submitter_id).get(0).getUsername();
 		this.resolver_id = resolver_id;
 		if (resolver_id == 0) {
 			this.resolver="";
 		} else {
-		this.resolver = EmployeeService.findByID(resolver_id).getUsername();
+		this.resolver = EmployeeService.findByID(resolver_id).get(0).getUsername();
 		}
 		this.status_id = status_id;
 		this.type_id = type_id;

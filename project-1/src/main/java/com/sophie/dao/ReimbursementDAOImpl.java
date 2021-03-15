@@ -118,7 +118,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			int type_id = rs.getInt("type_id");
 			String resolver = "";
 			if (resolver_id != 0) {
-			resolver = EmployeeService.findByID(resolver_id).getUsername();
+			resolver = EmployeeService.findByID(resolver_id).get(0).getUsername();
 			}
 			String type = "";
 			String status = "";
@@ -151,7 +151,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			default:
 				break;
 			}
-			String submitter = EmployeeService.findByID(submitter_id).getUsername();
+			String submitter = EmployeeService.findByID(submitter_id).get(0).getUsername();
 			
 			re = new Reimbursement(amount, submitted, resolved, description, submitter_id, submitter, resolver_id, resolver, status_id, type_id, status, type);
 			log.info(re.toString());
@@ -385,7 +385,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			int type_id = rs.getInt("type_id");
 			String resolver = "";
 			if (resolver_id != 0) {
-			resolver = EmployeeService.findByID(resolver_id).getUsername();
+			resolver = EmployeeService.findByID(resolver_id).get(0).getUsername();
 			}
 			String type = "";
 			String status = "";
@@ -418,7 +418,7 @@ public class ReimbursementDAOImpl implements ReimbursementDAO{
 			default:
 				break;
 			}
-			String submitter = EmployeeService.findByID(submitter_id).getUsername();
+			String submitter = EmployeeService.findByID(submitter_id).get(0).getUsername();
 			
 			re = new Reimbursement(amount, submitted, resolved, description, submitter_id, submitter, resolver_id, resolver, status_id, type_id, status, type);
 			list.add(re);

@@ -17,6 +17,6 @@ public interface EmployeeDAO {
 	
 	public ArrayList<Employee> findAll();
 	
-	public Employee findByID(int id);
+	public ArrayList<Employee> findByID(int id);
 	
 }

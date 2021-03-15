@@ -24,19 +24,20 @@ return employeeForm;
 }
 
 function genReimbursementForm() {
-  if (document.getElementById("status") != null){
+  if (role_id == 2){
   var reimbursementForm = {
     amount: document.getElementById("amount").value,
     description: document.getElementById("description").value,
     type: document.getElementById("type").value,
     status: document.getElementById("status").value
     }
-  } else {
+  }
+  else if (role_id == 1){
     var reimbursementForm = {
       amount: document.getElementById("amount").value,
       description: document.getElementById("description").value,
       type: document.getElementById("type").value
-  }
+      }
   }
   console.log(reimbursementForm);
   return reimbursementForm;
@@ -82,7 +83,6 @@ function employeeViewPendingReimbursementRequests() {
     xhr.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
           var myArr = JSON.parse(this.responseText);
-          console.log(myArr[0]);
           populateReimbursementTable(myArr, "reimbursement_table");
       }
   }
@@ -112,6 +112,7 @@ function prepEmployeeTable(table_id, anchor) {
       table = document.createElement(table);
       table.id = table_id;
       anchor.appendChild(table);
+      table = document.getElementById(table_id);
     }
   let tr = document.createElement("tr");
   table.appendChild(tr);
@@ -138,39 +139,41 @@ function prepEmployeeTable(table_id, anchor) {
 }
 
 function populateEmployeeTable(table_id, someArray) {
+  //NOTE: someArray is apparently *not* an Array going in here! So we'll have to transform it into one.
   console.log("Hit the populateEmployeeTable function");
   var table = document.getElementById(table_id);
-  console.log(someArray);
-  console.log(typeof(someArray));
-  //someArray.forEach( (obj) => {
-  for (var i = 0; i < someArray.length; i++) {
-  var obj = someArray[i];
-  console.log(obj);
-  // 1. for each object create a new row (<tr>) and stick it onto (append) the table that exists
+  var i;
+  var j;
+  var k;
   let tr = document.createElement("tr");
-  table.appendChild(tr);
-  // 2. for each obj enter some data (<td>)
   let td = document.createElement("td");
-          
-  tr.appendChild(td);
-  td.innerHTML = obj.firstName;
-         
-  td = document.createElement("td");
-  tr.appendChild(td);
-   td.innerHTML = obj.lastName;
-          
-  td = document.createElement("td");
-  tr.appendChild(td);
-  td.innerHTML = obj.email;
-          
-  td = document.createElement("td");
-  tr.appendChild(td);
-  td.innerHTML = obj.username;
+  someArray = Object.entries(someArray);
+   console.log(someArray);
+   for (i = 0; i < someArray.length; i++){
+     someArray[i] = someArray[i][1];
+   }
     
-  td = document.createElement("td");
-  tr.appendChild(td);
-  td.innerHTML = obj.password;
-    
+    console.log(someArray);
+    console.log(someArray.length);
+    for (i = 0; i < someArray.length; i++){
+      tr = document.createElement("tr");
+      table.appendChild(tr);
+      td = document.createElement("td");
+      td.innerHTML = someArray[i].firstName;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.innerHTML = someArray[i].lastName;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.innerHTML = someArray[i].email;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.innerHTML = someArray[i].username;
+      tr.appendChild(td);
+      td = document.createElement("td");
+      td.innerHTML = someArray[i].password;
+      tr.appendChild(td); 
+ 
   if(role_id == 2){
           
     td = document.createElement("td");
@@ -199,18 +202,19 @@ function populateEmployeeTable(table_id, someArray) {
     pETbtn3.onclick = function() {employeeViewReimbursementRequests();};
     td.appendChild(pETbtn3);
       }
+    }
     
     };//);
-  }
 
   function prepReimbursementTable(table_id, anchor) {
     console.log("Hit the prepReimbursementTable function");
     var anchor = document.getElementById(anchor);
     var table = document.getElementById(table_id);
     if (table == null){
-      table = document.createElement(table);
+      table = document.createElement("table");
       table.id = table_id;
       anchor.appendChild(table);
+      table = document.getElementById(table_id);
     }
     let tr = document.createElement("tr");
     table.appendChild(tr);
@@ -251,50 +255,52 @@ function populateEmployeeTable(table_id, someArray) {
   function populateReimbursementTable(someArray, table_id){
     console.log("Attempting to populate reimbursement table.");
     var table = document.getElementById(table_id);
-    for (var i = 0; i < someArray.length; i++) {
-      console.log(someArray);
-      console.log(typeof(someArray));
-      console.log(obj);
-      var obj = someArray[i];
-        // 1. for each object create a new row (<tr>) and stick it onto (append) the table that exists
-        let tr = document.createElement("tr");
-        table.appendChild(tr);
-
-        // 2. for each obj enter some data (<td>)
-        let td = document.createElement("td");
-        
-        tr.appendChild(td);
-        td.innerHTML = obj.Amount;
-        
-        td = document.createElement("td");
-        tr.appendChild(td);
-        td.innerHTML = obj.Submission_Time;
-        
-        td = document.createElement("td");
-        tr.appendChild(td);
-        td.innerHTML = obj.Resolution_Time;
-        
-        td = document.createElement("td");
-        tr.appendChild(td);
-        td.innerHTML = obj.Description;
-  
-        td = document.createElement("td");
-        tr.appendChild(td);
-        td.innerHTML = obj.Submitter;
-
-        td = document.createElement("td");
-        tr.appendChild(td);
-        td.innerHTML = obj.Resolver;
-        
-        td = document.createElement("td");
-        tr.appendChild(td);
-        td.innerHTML = obj.Status;
-        
-        td = document.createElement("td");
-        tr.appendChild(td);
-        td.innerHTML = obj.Type;
-        };
+    console.log(table);
+    var i;
+    var j;
+    var k;
+    let tr = document.createElement("tr");
+    let td = document.createElement("td");
+    someArray = Object.entries(someArray);
+    for (i = 0; i < someArray.length; i++){
+      someArray[i] = someArray[i][1];
     }
+    
+    console.log(someArray);
+    console.log(someArray.length);
+    for (j = 0; j < someArray.length; j++){ // 1. for each object create a new row (<tr>) and stick it onto (append) the table that exists
+      tr = document.createElement("tr");
+      table.appendChild(tr);
+      //console.log(someArray[j]); //This is an OBJECT with fields: id, amount, submitted, resolved, description, etc.
+      for(k = 0; k < Object.keys(someArray[j]).length; k++){ // 2. for each obj enter some data (<td>)
+        if (k == 1 || k == 2 || k == 3 || k == 4 || k == 6 || k == 8 || k == (Object.keys(someArray[j]).length - 2) || k == (Object.keys(someArray[j]).length - 1)){
+        //console.log(Object.values(someArray[j])[k]);
+        td = document.createElement("td");
+        td.innerHTML = Object.values(someArray[j])[k];
+        tr.appendChild(td);
+        }
+      }
+      if(role_id == 2){
+          
+        td = document.createElement("td");
+        tr.appendChild(td);
+        //td.innerHTML = "View Pending Reimbursements for Employee";
+        pRTbtn1 = document.createElement("button");
+        pRTbtn1.innerHTML = "Resolve Reimbursement";
+        pRTbtn1.setAttribute("onclick", "resolveReimbursement()");
+        pRTbtn1.onclick = function() {resolveReimbursement();};
+        td.appendChild(pRTbtn1);
+        }
+    }
+        }
+
+        /*
+      tr = document.createElement("tr");
+      table.appendChild(tr);
+      td = document.createElement("td");
+      td.innerHTML = someArray[j]
+      tr.appendChild(td);
+      */
 
 function viewPersonalInfo(){
     console.log("viewPersonalInfo");
@@ -305,11 +311,23 @@ function viewPersonalInfo(){
         console.log(this.responseText);
         console.log(typeof(this.responseText));
         var myArr = JSON.parse(this.responseText);
-        console.log(myArr);
-        console.log(typeof(myArr));
-        console.log(myArr[0]);
-        console.log(typeof(myArr[0]));
         populateEmployeeTable("employee_table", myArr);
+        }
+    }
+    xhr.open("GET", URL);
+    xhr.send();
+}
+
+function viewEmployeeResolvedReimbursementRequests(){
+  console.log("viewEmployeeResolvedReimbursementRequests");
+    var URL = URLBase + "/viewresolvedforemployee";
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText);
+        console.log(typeof(this.responseText));
+        var myArr = JSON.parse(this.responseText);
+        populateReimbursementTable(myArr, "reimbursement_table");
         }
     }
     xhr.open("GET", URL);
@@ -369,10 +387,6 @@ function viewAllEmployees(){
         console.log(this.responseText);
         console.log(typeof(this.responseText));
         var myArr = JSON.parse(this.responseText);
-        console.log(myArr);
-        console.log(typeof(myArr));
-        console.log(myArr[0]);
-        console.log(typeof(myArr[0]));
         populateEmployeeTable("employee_table", myArr);
       }
   }
@@ -410,15 +424,16 @@ function resolvePendingReimbursements(){
 
 function viewAllReimbursementRequests(){
   console.log("View All Reimbursements");
-    var URL = URLBase + "/viewallreimbursements";
+    var URL = URLBase + "/viewall";
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
           var myArr = JSON.parse(this.responseText);
-          console.log(myArr[0]);
           populateReimbursementTable(myArr, "reimbursement_table");
       }
   }
+  xhr.open("GET", URL);
+  xhr.send();
 }
 
 function reimbursementAction(){
@@ -481,9 +496,6 @@ function reimbursementAction(){
         
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
-        //("employee_table", "anchordiv1");
-        prepEmployeeTable("employee_table", "anchordiv1");
-        prepReimbursementTable("reimbursement_table", "anchordiv2");
 
         break;
 
@@ -520,7 +532,27 @@ function reimbursementAction(){
         element.appendChild(btn4);
         element.appendChild(document.createElement("br"));
         element.appendChild(document.createElement("br"));
-        
+
+        var lbl = document.createElement("label");
+        lbl.for = "status";
+        lbl.innerHTML = "Status: ";
+        var sel = document.createElement("select");
+        sel.name = "status";
+        sel.id = "status";
+        var opt = document.createElement("option");
+        opt.value = "Pending";
+        opt.innerHTML = "Pending";
+        var formbase = document.getElementById("reimburseform");
+        formbase.appendChild(lbl);
+        lbl.append(sel);
+        sel.append(opt);
+        opt.value = "Approved";
+        opt.innerHTML = "Approved";
+        sel.append(opt);
+        opt.value = "Rejected";
+        opt.innerHTML = "Rejected";
+        sel.append(opt);
+
         break;
         default:
             break;
